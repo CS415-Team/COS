@@ -26,12 +26,21 @@ if(isset($_SESSION['id']))
 <head>
   <meta charset="UTF-8">
     <title>Vendor Login</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-		
+    <!--bootstrap files-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!--bootstrap files-->
+
+    <!--font files-->
+    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Great+Vibes|Permanent+Marker" rel="stylesheet">
+    <!---->
+
 		<style>
 		ul li{}
 		ul li a {color:white;padding:40px; }
@@ -55,16 +64,33 @@ if(isset($_SESSION['id']))
     
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="index.php" style="color:black;font-weight:700">Home
-                  
-                </a>
+            <a class="nav-link" href="index.php" style="color:black;font-weight:700">Home</a>
           </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"  style="color:#063344;font-weight:650" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Menus
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="border:1px solid black;">
+            <div class="dropdown-header" align="center" 
+              style="background-color:#0197A5; color:white; font-family: 'Times New Roman'; font-style:italic; font-weight:bold;">
+              MEAL TYPE
+            </div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Breakfast Specials</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="menu.php#lunch">Lunch Specials</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Dinner Specials</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="menu.php">All</a>
+            </div>
+          </li>
+          
           <li class="nav-item">
             <a class="nav-link" href="aboutus.php" style="color:#063344;font-weight:650">About</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="services.php" style="color:#063344;font-weight:650">Services</a>
-          </li>
+
           <li class="nav-item">
             <a class="nav-link" href="contact.php" style="color:#063344;font-weight:650">Contact</a>
           </li>
@@ -76,8 +102,8 @@ if(isset($_SESSION['id']))
     
   </nav>
 
-  <div class="container justify-content-center" style=" position:relative; padding:40px; border:1px solid #063344; top:30%; width:400px;">
-      <ul class="nav nav-tabs nabbar_inverse" id="myTab" style="background:#063344;border-radius:10px 10px 10px 10px;" role="tablist">
+  <div class="container justify-content-center" style=" position:relative; padding:40px; border:1px solid #0197A5; top:30%; width:400px;">
+      <ul class="nav nav-tabs nabbar_inverse" id="myTab" style="background:#0197A5;border-radius:10px 10px 10px 10px;" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#login" role="tab" aria-controls="home" aria-selected="true">Vendor Login</a>
         </li>
@@ -111,8 +137,8 @@ if(isset($_SESSION['id']))
 </body>
 
 <div style="position: fixed; Width: 100%; bottom: 0;">
-  <div class="container" align="center">
-      <strong>Copyright &copy; 2020 <a href="index.php" style="color:#063344; text-decoration:none;">USP</a>.</strong> All rights reserved.
-  </div>
+<div class="" align="center" style="background:#0197A5; margin:0; padding:0; border:2px solid white;">
+		<strong style="color:#063344;">Copyright &copy; 2020 <a href="index.php" style="color:#063344; text-decoration:none;">USP</a>. All rights reserved. </strong>
+</div>		
 <div>
 </html>

@@ -162,15 +162,31 @@ ul li a:hover{text-decoration:none;}
 	
       <ul class="navbar-nav ml-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="index.php">Home
-                
-              </a>
+          <a class="nav-link" href="index.php">Home</a>
         </li>
+
+		<li class="nav-item dropright">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Menus
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="border:1px solid black;">
+				<div class="dropdown-header" align="center" 
+					style="background-color:#0197A5; color:white; font-family: 'Times New Roman'; font-style:italic; font-weight:bold;">
+					MEAL TYPE
+				</div>
+				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="#">Breakfast Specials</a>
+				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="menu.php#lunch">Lunch Specials</a>
+				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="#">Dinner Specials</a>
+				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="menu.php">All</a>
+				</div>
+		</li>
+		
         <li class="nav-item">
           <a class="nav-link" href="aboutus.php">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="services.php">Services</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="contact.php">Contact</a>
@@ -181,7 +197,7 @@ ul li a:hover{text-decoration:none;}
 			if(empty($cust_id))
 			{
 			?>
-			<a href="form/index.php?msg=you must be login first"><span style="color:red; font-size:30px;"><i class="fa fa-shopping-cart" aria-hidden="true"><span style="color:red;" id="cart"  class="badge badge-light">0</span></i></span></a>
+			<a href="form/index.php?msg=You must be logged in first"><span style="color:red; font-size:30px;"><i class="fa fa-shopping-cart" aria-hidden="true"><span style="color:red;" id="cart"  class="badge badge-light">0</span></i></span></a>
 			
 			&nbsp;&nbsp;&nbsp;
 			<button class="btn btn-danger my-2 my-sm-0" name="login" type="submit">Log In</button>&nbsp;&nbsp;&nbsp;
@@ -206,8 +222,8 @@ ul li a:hover{text-decoration:none;}
 <!--navbar ends-->
 
 <br><br><br>
-<div class="container-fluid" style="margin-top:40px">
-  <img src="img/contact.bmp" width="100%">
+<div class="container-fluid" style="margin-top:40px; margin-left:0; margin-right:0; padding:0;">
+  <img src="img/contact-us.jpg" width="100%" height="600">
 </div>
 <br>
 <div class="container">
@@ -221,7 +237,7 @@ ul li a:hover{text-decoration:none;}
                  <input type="email" class="form-control"  placeholder="email*" value="<?php if(isset($cust_id)) echo $cust_id; ?>" name="email" required/>
             </div>
 			<div class="form-group">
-                 <input type="tel" class="form-control" pattern="[6-9]{1}[0-9]{9}"  name="phone" placeholder="Phone(optinal) EX 9213298761"/>
+                 <input type="tel" class="form-control" pattern="[2-9]{1}[0-9]{6}"  name="phone" placeholder="Phone Contact(optional) E.g. 6799999"/>
             </div>
 			<div class="form-group">
                 <textarea class="form-control"    placeholder="Message*" name="msgtxt" rows="3" col="10" required/></textarea/>
@@ -233,9 +249,15 @@ ul li a:hover{text-decoration:none;}
 	</div>
     <div class="col-sm-4" style="padding:30px;">
 	   <div class="form-group">
-           <i class="fa fa-phone" aria-hidden="true"></i>&nbsp;<b>7503515386</b><br><br>
-			<i class="fa fa-home" aria-hidden="true"></i>&nbsp; 23-A ,North-East Campus,Kingsway,London Zip Code-2000411<br>(24*7 Days)
-	       
+           <i class="fa fa-phone" aria-hidden="true"></i>&nbsp;<b>(+679) 323 1000</b><br><br>
+			<i class="fa fa-home" aria-hidden="true"></i>&nbsp; The University of The South Pacific
+			<br>
+			<p style="margin:0; text-indent: 2em"> 
+				Private Bag, Laucala Campus,
+			</p>
+			<p style="margin:0; text-indent: 2em"> 
+				Suva, Fiji.
+			</p>
 	   </div>
 	</div>
   </div>

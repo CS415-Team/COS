@@ -34,23 +34,31 @@ extract($_REQUEST);
 	
 	}
   }
-	
-	
-  
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en" >
 
 <head>
   <meta charset="UTF-8">
-    <title>Hotel Registration Form</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-		
+    <title>Vendor Registration Form</title>
+  <!--bootstrap files-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <!--bootstrap files-->
+
+  <!--font files-->
+  <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+  <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Great+Vibes|Permanent+Marker" rel="stylesheet">
+  <!---->
+
+
 		<style>
 		ul li{list-style:none;}
 		ul li a {color:black;text-decoration:none; }
@@ -75,16 +83,33 @@ extract($_REQUEST);
 	
       <ul class="navbar-nav ml-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="index.php" style="color:black;font-weight:700">Home
-                
-              </a>
+          <a class="nav-link" href="index.php" style="color:black;font-weight:700">Home</a>
         </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"  style="color:#063344;font-weight:650" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Menus
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="border:1px solid black;">
+            <div class="dropdown-header" align="center" 
+              style="background-color:#0197A5; color:white; font-family: 'Times New Roman'; font-style:italic; font-weight:bold;">
+              MEAL TYPE
+            </div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Breakfast Specials</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="menu.php#lunch">Lunch Specials</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Dinner Specials</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="menu.php">All</a>
+            </div>
+          </li>
+
         <li class="nav-item">
           <a class="nav-link" href="aboutus.php" style="color:#063344;font-weight:650">About</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="services.php" style="color:#063344;font-weight:650">Services</a>
-        </li>
+
         <li class="nav-item">
           <a class="nav-link" href="contact.php" style="color:#063344;font-weight:650">Contact</a>
         </li>
@@ -126,11 +151,11 @@ extract($_REQUEST);
                      </div>
                      <div class="form-group">
                          <label for="mob">Mobile:</label>
-                         <input type="tel" class="form-control" pattern="[7-9]{1}[0-9]{9}" value="<?php if(isset($mob)) { echo $mob;}?>"id="mob" placeholder="9123456578" name="mob" required/>
+                         <input type="tel" class="form-control" pattern="[2-9]{1}[0-9]{6}" value="<?php if(isset($mob)) { echo $mob;}?>"id="mob" placeholder="9123456578" name="mob" required/>
                      </div>
 	                 <div class="form-group">
                           <label for="phone">Phone:</label>
-                          <input type="tel" class="form-control" pattern="[011]{3}[0-7]{7}" id="phone" value="<?php if(isset($phone)) { echo $phone;}?>" placeholder="011-1234567" name="phone" required>
+                          <input type="tel" class="form-control" pattern="[2-9]{1}[0-9]{6}" id="phone" value="<?php if(isset($phone)) { echo $phone;}?>" placeholder="011-1234567" name="phone" required>
                      </div>
 	                 <div class="form-group">
                           <label for="add">Address:</label>
