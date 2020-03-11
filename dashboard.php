@@ -50,12 +50,21 @@ else
 <html>
   <head>
      <title>Admin control panel</title>
+	 <!--bootstrap files-->
 	 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">   
-		 <style>
+	  <!--bootstrap files-->
+	 
+	 <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+     <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+	 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	 <link href="https://fonts.googleapis.com/css?family=Great+Vibes|Permanent+Marker" rel="stylesheet">
+     
+	
+	 <style>
 		ul li{}
 		ul li a {color:black;}
 		ul li a:hover {color:black; font-weight:bold;}
@@ -94,14 +103,20 @@ ul li a:hover{text-decoration:none;}
 	<body>
 
 	
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-  
-    <a class="navbar-brand" href="index.php"><span style="color:green;font-family: 'Permanent Marker', cursive;">Food Hunt</span></a>
-    <?php
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #0197A5;">
+	
+	<a class="navbar-brand" href="index.php"><img src="img/USP Logo.png" style="display: inline-block;"></a>
+	<a class="navbar-brand" href="index.php"><span style="color:white;font-family: 'Permanent Marker', cursive;font-size:22pt;">NaBukDiSh</span>
+		<span style="color:white;font-family:'Permanent Marker', cursive;font-size:18pt;">&copy</span>
+		<br>
+		<span style="color:white;font-family: 'Permanent Marker', cursive;font-size:12pt;">Food Ordering System</span>
+	</a>
+	
+	<?php
 	if(!empty($admin_username))
 	{
 	?>
-	<a class="navbar-brand" style="color:black; text-decoratio:none;"><i class="far fa-user">Admin</i></a>
+	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user">Admin</i></a>
 	<?php
 	}
 	?>
@@ -111,18 +126,41 @@ ul li a:hover{text-decoration:none;}
     <div class="collapse navbar-collapse" id="navbarResponsive">
 	
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="index.php">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="aboutus.php">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="services.php">Services</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="contact.php">Contact</a>
-        </li>
+
+	  <li class="nav-item active">
+				<a class="nav-link" href="index.php" style="color:black;font-weight:700">Home</a>
+				</li>
+				
+                <li class="nav-item dropright">
+                    <a class="nav-link dropdown-toggle" href="#" style="color:#063344;font-weight:650" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Menus
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="border:1px solid black;">
+                    <div class="dropdown-header" align="center" 
+                        style="background-color:#0197A5; color:white; font-family: 'Times New Roman'; font-style:italic; font-weight:bold;">
+                        MEAL TYPE
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="menu.php#breakfast">Breakfast Specials</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="menu.php#lunch">Lunch Specials</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Dinner Specials</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="menu.php">All</a>
+                    </div>
+                </li>
+
+				<li class="nav-item">
+				<a class="nav-link" href="aboutus.php" style="color:#063344;font-weight:650">About</a>
+				</li>
+
+				<li class="nav-item">
+				<a class="nav-link" href="contact.php" style="color:#063344;font-weight:650">Contact</a>
+				</li>
+
+
+
 		<?php
 		if(isset($_SESSION['admin']))
 		{
@@ -130,7 +168,7 @@ ul li a:hover{text-decoration:none;}
 			<li class="nav-item">
             <a class="nav-link" href="">
 		      <form method="post">
-			    <button type="submit" name="logout" class="btn btn-outline-success">Log Out</button>
+			    <button type="submit" name="logout" class="btn btn-success">Log Out</button>
 			  </form>
 		    </a>
             </li>
@@ -148,25 +186,21 @@ ul li a:hover{text-decoration:none;}
 <br><br><br><br>
 <!--details section-->
  
-<div class="container">
+<div class="container" style="margin-top:50px;">
        <!--tab heading-->
-	   <ul class="nav nav-tabs nabbar_inverse" id="myTab" style="background:#ED2553;border-radius:10px 10px 10px 10px;" role="tablist">
+	   <ul class="nav nav-tabs navbar_inverse" id="myTab" style="background:#0197A5;border-radius:10px 10px 10px 10px;" role="tablist">
           <li class="nav-item">
-             <a class="nav-link active" style="color:#BDDEFD;" id="viewitem-tab" data-toggle="tab" href="#viewitem" role="tab" aria-controls="viewitem" aria-selected="true">View Food Items</a>
+             <a class="nav-link active" style="color:#063344;" id="viewitem-tab" data-toggle="tab" href="#viewitem" role="tab" aria-controls="viewitem" aria-selected="true">View Food Items</a>
           </li>
           <li class="nav-item">
-              <a class="nav-link"  style="color:#BDDEFD;" id="manageaccount-tab" data-toggle="tab" href="#manageaccount" role="tab" aria-controls="manageaccount" aria-selected="false">Account Settings</a>
+              <a class="nav-link"  style="color:#063344;" id="manageaccount-tab" data-toggle="tab" href="#manageaccount" role="tab" aria-controls="manageaccount" aria-selected="false">Account Settings</a>
           </li>
 		  <li class="nav-item">
-              <a class="nav-link" style="color:#BDDEFD;"  id="ManageVendors-tab" data-toggle="tab" href="#ManageVendors" role="tab" aria-controls="ManageVendors" aria-selected="false">Manage Vendors</a>
+              <a class="nav-link" style="color:#063344;"  id="ManageVendors-tab" data-toggle="tab" href="#ManageVendors" role="tab" aria-controls="ManageVendors" aria-selected="false">Manage Vendors</a>
           </li>
 		  <li class="nav-item">
-              <a class="nav-link" style="color:#BDDEFD;" id="orderstatus-tab" data-toggle="tab" href="#orderstatus" role="tab" aria-controls="orderstatus" aria-selected="false">Order status</a>
+              <a class="nav-link" style="color:#063344;" id="orderstatus-tab" data-toggle="tab" href="#orderstatus" role="tab" aria-controls="orderstatus" aria-selected="false">Order status</a>
           </li>
-		  
-		  
-		  
-		  
        </ul>
 	   <br><br>
 	<!--tab 1 starts-->   

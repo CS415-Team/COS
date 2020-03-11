@@ -56,32 +56,36 @@ while($row=mysqli_fetch_array($query))
 <html>
   <head>
      <title>Home</title>
+	 <!--bootstrap files-->
 	 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-      <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+	  <!--bootstrap files-->
+	 
+	 <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
      <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
 	 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	 <link href="https://fonts.googleapis.com/css?family=Great+Vibes|Permanent+Marker" rel="stylesheet">
+
      
 	 <style>
-	 .carousel-item {
-  height: 100vh;
-  min-height: 350px;
-  background: no-repeat center center scroll;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-	 }
-  body{
-     background-image:url("img/main_spice2.jpg");
-	 background-repeat: no-repeat;
-	 background-attachment: fixed;
-	  background-position: center;
-  
-}
+	.carousel-item {
+	height: 100vh;
+	min-height: 350px;
+	background: no-repeat center center scroll;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+		}
+	body{
+		background-image:url("img/background.jpg");
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-position: center;
+	
+	}
 
 	 </style>
 	 
@@ -146,7 +150,7 @@ ul li {list-style:none;}
 	if(!empty($cust_id))
 	{
 	?>
-	<a class="navbar-brand" style="color:black; text-decoratio:none;"><i class="far fa-user"><?php if(isset($cust_id)) { echo $qqr['fld_name']; }?></i></a>
+	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user"><?php if(isset($cust_id)) { echo $qqr['fld_name']; }?></i></a>
 	<?php
 	}
 	?>
@@ -159,12 +163,31 @@ ul li {list-style:none;}
         <li class="nav-item active">
           <a class="nav-link" href="index.php" style="color:black;font-weight:700">Home</a>
         </li>
+
+		<li class="nav-item dropright">
+                    <a class="nav-link dropdown-toggle" href="#"  style="color:#063344;font-weight:650" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Menus
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="border:1px solid black;">
+                    <div class="dropdown-header" align="center" 
+                        style="background-color:#0197A5; color:white; font-family: 'Times New Roman'; font-style:italic; font-weight:bold;">
+                        MEAL TYPE
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Breakfast Specials</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="menu.php#lunch">Lunch Specials</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Dinner Specials</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="menu.php">All</a>
+                    </div>
+                </li>
+
         <li class="nav-item">
           <a class="nav-link" href="aboutus.php" style="color:#063344;font-weight:650">About</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="services.php" style="color:#063344;font-weight:650">Services</a>
-        </li>
+
         <li class="nav-item">
           <a class="nav-link" href="contact.php" style="color:#063344;font-weight:650">Contact</a>
         </li>
@@ -174,7 +197,7 @@ ul li {list-style:none;}
 			if(empty($cust_id))
 			{
 			?>
-			<a href="form/index.php?msg=you must be login first"><span style="color:red; font-size:30px;"><i class="fa fa-shopping-cart" aria-hidden="true"><span style="color:red;" id="cart"  class="badge badge-light">0</span></i></span></a>
+			<a href="form/index.php?msg=You must be logged in first"><span style="color:red; font-size:30px;"><i class="fa fa-shopping-cart" aria-hidden="true"><span style="color:red;" id="cart"  class="badge badge-light">0</span></i></span></a>
 			
 			&nbsp;&nbsp;&nbsp;
 			<button class="btn btn-danger my-2 my-sm-0" name="login" type="submit">Log In</button>&nbsp;&nbsp;&nbsp;
@@ -201,26 +224,30 @@ ul li {list-style:none;}
 </nav>
 <!--navbar ends-->
 <br><br>
-<div class="container-fluid" style="margin-top:100px">
-  <img src="img/about.bmp" width='100%'/>
+<div class="container-fluid" style="margin-top:90px">
+  <img src="img/about.jpg" height="600" width='100%'/>
 </div>
 <br><br>
-<div class="container-fluid" style="background:black; opacity:0.30;">
-<h1 style="color:white; text-align:center; text-transform:uppercase;">we do this by</h1>
-<h3 style="color:white; text-align:center; text-transform:uppercase;">Helping people discover great places around them.</h3>
-<p style="color:white; text-align:center; font-size:25px;">Our team gathers information from every restaurant on a regular basis to ensure our data is fresh. Our vast community of food lovers share their reviews and photos, so you have all that you need to make an informed choice.</p>
+<div class="container-fluid" style="background:black; opacity:0.60;">
+<h1 style="color:white; text-align:center; text-transform:uppercase;">About Us</h1>
+<h3 style="color:white; text-align:center; text-transform:uppercase; font-style:italic;">What does NaBukDiSh Mean?</h3>
+<p style="color:white; text-align:center; font-size:25px;">NaBukDish is a combination of the names of the creators of the system. Na for Naval, Buk for Buksh, Di for Divnesh and Sh for Shimneet. Plus it also has the word dish in it. Get it?</p>
 
-<h3 style="color:white; text-align:center; text-transform:uppercase;">Building amazing experiences around dining.</h3>
-<p style="color:white; text-align:center; font-size:25px;">Starting with information for over 1 million restaurants (and counting) globally, we're making dining smoother and more enjoyable with services like online ordering and table reservations.</p>
+<h3 style="color:white; text-align:center; text-transform:uppercase; font-style:italic;">Why create NaBukDish?</h3>
+<p style="color:white; text-align:center; font-size:25px;">NaBukDish Food Ordering System was created as part of 
+a project assignment for the course CS415 at the University of The South Pacific in semester 1 of 2020.
+</p>
 
-<h3 style="color:white; text-align:center; text-transform:uppercase;">Enabling restaurants to create amazing experiences.</h3>
-<p style="color:white; text-align:center; font-size:25px;">With dedicated engagement and management tools, we're enabling restaurants to spend more time focusing on food itself, which translates directly to better dining experiences.</p>
 </div>
 
 <br><br>
-<div class="container-fluid" style="background:white; text-transform:uppercase;padding:20px; border-left:10px solid black;"><h3>locate us</h3></div>
+<div class="container-fluid" style="background:white; text-transform:uppercase;padding:20px; border-left:10px solid black;"><h3>Our Location</h3></div>
 <div class="container-fluid">
-<div class="mapouter"><div class="gmap_canvas"><iframe width="100%" height="304" id="gmap_canvas" src="https://maps.google.com/maps?q=hotel%20limontree&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://www.emojilib.com">emojilib.com</a></div><style>.mapouter{position:relative;text-align:right;height:304px;width:100%;}.gmap_canvas {overflow:hidden;background:none!important;height:304px;width:100%;}</style></div>
+<div class="mapouter"><div class="gmap_canvas"><iframe width="100%" height="304" id="gmap_canvas" 
+	src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3669.1410809099107!2d178.44288106824857!3d-18.150103553226995!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x55dcb02171075a14!2sUSP%20Faculty%20of%20Science%20%26%20Technology!5e1!3m2!1sen!2sfj!4v1583395682586!5m2!1sen!2sfj" 
+	frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://www.emojilib.com">emojilib.com</a></div>
+	<style>.mapouter{position:relative;text-align:right;height:304px;width:100%;}.gmap_canvas {overflow:hidden;background:none!important;height:304px;width:100%;}</style>
+</div>
 </div>
 <br><br>
  <?php
