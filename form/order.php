@@ -1,6 +1,16 @@
 <?php
 include("../connection.php");
 echo $cust_id=$_GET['cust_id'];
+if(isset($_GET['cust_id']))
+{
+	$loc = $_GET['loc'];
+	$pay = $_GET['pay'];
+	$cust_id=$_GET['cust_id'];
+}
+else
+{
+	$cust_id="";
+}
 
 $query=mysqli_query($con,"select tbfood.food_id,tbfood.foodname,tbfood.fldvendor_id,tbfood.cost,tbfood.cuisines,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id from tbfood inner  join tblcart on tbfood.food_id=tblcart.fld_product_id where tblcart.fld_customer_id='$cust_id'");
 $re=mysqli_num_rows($query);
@@ -15,8 +25,8 @@ while($row=mysqli_fetch_array($query))
 	echo 'payment status is'.$paid="In Process";
 	
 	if(mysqli_query($con,"insert into tblorder
-	(fld_cart_id,fldvendor_id,fld_food_id,fld_email_id,fld_payment,fldstatus) values
-	('$cart_id','$ven_id','$food_id','$cust_id','$cost','$paid')"))
+	(fld_cart_id,fldvendor_id,fld_food_id,fld_email_id,fld_payment,fldstatus,delivery_location,payment_option) values
+	('$cart_id','$ven_id','$food_id','$cust_id','$cost','$paid', '$loc', '$pay')"))
 	{
 		if(mysqli_query($con,"delete from tblcart where fld_cart_id='$cart_id'"))
 		{

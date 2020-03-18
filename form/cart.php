@@ -17,6 +17,8 @@ else
 
 if(isset($_SESSION['cust_id']))
  {
+ $loc = $_POST['deliv'];
+ $pay = $_POST['payment'];
  $cust_id=$_SESSION['cust_id'];
  $qq=mysqli_query($con,"select * from tblcustomer where fld_email='$cust_id'");
 	 $qqr= mysqli_fetch_array($qq);
@@ -26,24 +28,15 @@ if(empty($cust_id))
 	header("location:index.php?msg=you must login first");
 }
 
-if(isset($_GET['foodqty']))
-{
-	$prod_qty=$_GET['foodqty'];
-}
-else
-{
-	//header("location:menu.php?msg=Please fill in the quantity you would like to order first");
-	$prod_qty=1;
-}
-
 
 if(!empty($product_id && $cust_id))
 {
-if(mysqli_query($con,"insert into tblcart (fld_product_id,fld_customer_id,fld_product_quantity) values ('$product_id','$cust_id','$prod_qty') "))
+$qty = $_SESSION['qty'];
+if(mysqli_query($con,"insert into tblcart (fld_product_id,fld_customer_id,fld_product_quantity) values ('$product_id','$cust_id','$qty') "))
 {
 	echo "success";
 	$product_id="";
-	$prod_qty="";
+	//$prod_qty="";
 	header("location:cart.php");
 }
 else
@@ -234,6 +227,21 @@ if(isset($del))
             <div class="tab-pane fade show active" id="viewitem" role="tabpanel" aria-labelledby="home-tab">
                  <table class="table">
                   <tbody>
+					<tr style="font-weight:bold;">
+						<td></td>
+						<td>Food name</td>
+						<td>Price</td>
+						<td>Description</td>
+						<td>Vendor</td>
+						<td>Quantity Ordered</td>
+						<td></td>
+						<td>Product Total</td>
+					</tr>
+
+
+
+
+
 	               <?php
 	                  $query=mysqli_query($con,"select tbfood.foodname,tbfood.fldvendor_id,tbfood.cost,tbfood.cuisines,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id, tblcart.fld_product_quantity from tbfood inner  join tblcart on tbfood.food_id=tblcart.fld_product_id where tblcart.fld_customer_id='$cust_id'");
 	                  $re=mysqli_num_rows($query);
@@ -254,11 +262,13 @@ if(isset($del))
                          <td><?php echo $res['cuisines'];?></td>
                          <td><?php echo $nm; ?></td>
 						 <td><?php echo $res['fld_product_quantity'];?></td>
+						 <td><?php $pro = ($res['cost']*$res['fld_product_quantity']); ?></td>
+						 <td><?php echo "$" .$pro;?></td>
 
 		                <form method="post" enctype="multipart/form-data">
                            <td><button type="submit" name="del"  value="<?php echo $res['fld_cart_id']?>" class="btn btn-danger">Delete</button></td>
                         </form>
-                        <td><?php $total=$total+$res['cost']; $gtotal[]=$total;  ?></td>
+                        <td><?php $total=$total+($res['cost']*$res['fld_product_quantity']); $gtotal[]=$total;  ?></td>
                       </tr>
 					  
                    <?php
@@ -275,10 +285,51 @@ if(isset($del))
 					  
 					  </td>
 					  <td></td>
+
+					   <!--Delivery location section-->
+						<form method="post" action="cart.php">
+						<div class="w3-container">
+							<div class="column">
+							
+							<label <button type="button" style=" color:black; font-weight:bold; text-transform:uppercase;" class="btn btn-default"> Choose a Delivery Location:</label>
+
+							<select name="deliv" <button type="button" style=" color:white; font-weight:bold; text-transform:uppercase;" class="btn btn-primary">
+							  <option> USP locations</option>
+							  <option value="ICT Building A">ICT Building A</option>
+							  <option value="ICT Building B">ICT Building B</option>
+							  <option value="Lower Campus Hub">Lower Campus Hub</option>
+							  <option value="SLS Hub">SLS Hub</option>
+							  <option value="FBE Offices">FBE Offices</option>
+							  <option value="FSTE Offices">FSTE Offices</option>
+							  <option value="Library">Library</option>
+							  <option value="SCIMS Offices">SCIMS Offices</option>
+							</select>
+							
+							 <!-- Payment option section-->
+							
+							<label <button type="button" style=" color:black; font-weight:bold; text-transform:uppercase;" class="btn btn-default"> Choose a Payment Option:</label>
+							
+							<select name="payment" <button type="button" style=" color:white; font-weight:bold; text-transform:uppercase;" class="btn btn-primary">
+							  <option value="Payroll Deduction">Payroll Deduction</option>
+							  <option value="Cash on Delivery">Cash on Delivery</option>
+							</select>
+							
+							<button type="submit" name="deliver" class="btn btn-success">Submit</button>
+							
+ 
+							</form>
+							
+						</div>
+						</div>
 					  
 					  <td style="padding:30px; text-align:center;">
-					  <a href="order.php?cust_id=<?php echo $cust_id; ?>"><button type="button" style=" color:white; font-weight:bold; text-transform:uppercase;" class="btn btn-warning">Proceed to checkout</button></a>
+							<a href="../menu.php#lunch"><button type="button" style=" color:white; font-weight:bold; text-transform:uppercase;" class="btn btn-success">Continue Shopping</button></a>		
 					  </td>
+
+					  <td style="padding:30px; text-align:center;">
+						 <a href="order.php?cust_id=<?php echo $cust_id; ?>&loc=<?php echo $loc; ?>&pay=<?php echo $pay; ?>"><button type="button" style=" color:white; font-weight:bold; text-transform:uppercase;" class="btn btn-warning">Proceed to checkout</button></a>
+					  </td>
+
 					  <td></td>
 					  </tr>
 						<?php
@@ -330,6 +381,8 @@ if(isset($del))
 				<th>Order Number</th>
 				<th>Item Name</th>
 				<th>Price</th>
+				<th>Delivery Location</th>
+				<th>Payment Option</th>
 				<th>Cancel order</th>
 				    <tbody>
 					<?php
@@ -357,6 +410,8 @@ if(isset($del))
 					   ?>
 					  
 					   <td><?php echo $qrr['cost']; ?></td>
+					   <td><?php echo $roww['delivery_location']; ?></td>
+					   <td><?php echo $roww['payment_option']; ?></td>
 					   <td><a href="#" onclick="del(<?php echo $roww['fld_order_id'];?>);"><button type="button" class="btn btn-danger">Cancel Order</button></a></td>
 					   </tr>
 					 <?php
