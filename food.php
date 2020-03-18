@@ -244,10 +244,10 @@ if(isset($upd_account))
             <div class="tab-pane fade show active" id="viewitem" role="tabpanel" aria-labelledby="home-tab">
                  <div class="container"> 
 			 <table border="1" bordercolor="#F0F0F0" cellpadding="20px">
-			 <th>food Image</th>
-			 <th>food name</th>
-			 <th>food Price</th>
-			 <th>food cuisines </th>
+			 <th><!--food Image--></th>
+			 <th>Item</th>
+			 <th>Price($)</th>
+			 <th>Cuisine </th>
 			 <th>Payment Mode  </th>
 			 <th>Delete Item   </th>
 			 <th>Update item Details </th>

@@ -40,7 +40,7 @@ while($row=mysqli_fetch_array($query))
 	 
 	if(!empty($_SESSION['cust_id']))
 	{
-		 
+		$_SESSION['qty'] = $_POST['foodqty'];
 		header("location:form/cart.php?product=$addtocart");
 	}
 	else
@@ -409,127 +409,36 @@ if(isset($message))
 
 				while($res=mysqli_fetch_assoc($query))
 					{
-						$food_pic= "image/restaurant/".$res['fld_email']."/foodimages/".$res['fldimage'];
-					
-						if($res['foodname'] == "Chicken Curry")
-						{
+						//$food_pic= "image/restaurant/".$res['fld_email']."/foodimages/".$res['fldimage'];	
 					?>
 					<div class="col-md-3">
 						<div class="panel panel-default">
 							<div class="panel-heading text-center">
-								<b>Chicken Curry and rice</b>
+								<b><?php echo $res['foodname'] ?></b>
 							</div>
 							<div class="panel-body">
-								<img src="img/chicken-curry.jpg" height="300px" width="100%">
+								<img src="image/restaurant/<?php echo $res['fld_email']."/foodimages/".$res['fldimage'];?>"  height="300px" width="100%">
 							</div>
 							<span style="font-family: 'Miriam Libre', sans-serif; font-size:28px;color:#CB202D;"><?php echo $res['fld_name']; ?></span>
 							<br>
 							<span style="color:black; font-size:20px; white-space:nowrap;">Price: $<?php echo $res['cost']; ?></span>
 							<br>
-							<span style="color:black; font-size:20px; white-space:nowrap;">Quantity: 
-								<input type="number" name="foodqty" min="0" max="20" step="1" value="0" style="font-size:20px;"></span>
-							<br><br>
-							<form method="post">
+							
+							<form action="menu.php" method="post" id="cart">
+								<span style="color:black; font-size:20px; white-space:nowrap;">Quantity: 
+								<input type="number" id="foodqty" name="foodqty" min="0" max="20" step="1" value="0" style="font-size:20px;"></span>
+							
+								<br><br>
+
 								<div align="right">
 								<span style="color:black; font-size:20px; white-space:nowrap;">Add to cart: </span>
 								<button type="submit" name="addtocart" value="<?php echo $res['food_id'];?>")" >
 								<span style="color:green; font-size:25px;"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span></button>
 								</div>
-							<form>
+							</form>
 						</div>			
 					</div>
-					<?php } ?>
-
-
-					<?php	
-						if($res['foodname'] == "Chicken Fried Rice")
-						{
-					?>
-					<div class="col-md-3">
-						<div class="panel panel-default">
-							<div class="panel-heading text-center">
-								<b>Chicken Fried Rice</b>
-							</div>
-							<div class="panel-body">
-								<img src="img/chicken-fried-rice.jpg" height="300px" width="100%">
-							</div>
-							<span style="font-family: 'Miriam Libre', sans-serif; font-size:28px;color:#CB202D;"><?php echo $res['fld_name']; ?></span>
-							<br>
-							<span style="color:black; font-size:20px; white-space:nowrap;">Price: $<?php echo $res['cost']; ?></span>
-							<br>
-							<span style="color:black; font-size:20px; white-space:nowrap;">Quantity: 
-								<input type="number" name="foodqty" min="0" max="20" step="1" value="0" style="font-size:20px;"></span>
-							<br><br>
-							<form method="post">
-								<div align="right">
-								<span style="color:black; font-size:20px; white-space:nowrap;">Add to cart: </span>
-								<button type="submit" name="addtocart" value="<?php echo $res['food_id'];?>")" >
-								<span style="color:green; font-size:25px;"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span></button>
-								</div>
-							<form>
-						</div>			
-					</div>
-					<?php } ?>
-
-					<?php	
-						if($res['foodname'] == "Chicken Chopsuey")
-						{
-					?>
-					<div class="col-md-3">
-						<div class="panel panel-default">
-							<div class="panel-heading text-center">
-								<b>Chicken Chop Suey</b>
-							</div>
-							<div class="panel-body">
-								<img src="img/Chicken-Chopsuey.jpg" height="300px" width="100%">
-							</div>
-							<span style="font-family: 'Miriam Libre', sans-serif; font-size:28px;color:#CB202D;"><?php echo $res['fld_name']; ?></span>
-							<br>
-							<span style="color:black; font-size:20px; white-space:nowrap;">Price: $<?php echo $res['cost']; ?></span>
-							<br>
-							<span style="color:black; font-size:20px; white-space:nowrap;">Quantity: 
-								<input type="number" name="foodqty" min="0" max="20" step="1" value="0" style="font-size:20px;"></span>
-							<br><br>
-							<form method="post">
-								<div align="right">
-								<span style="color:black; font-size:20px; white-space:nowrap;">Add to cart: </span>
-								<button type="submit" name="addtocart" value="<?php echo $res['food_id'];?>")" >
-								<span style="color:green; font-size:25px;"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span></button>
-								</div>
-							<form>
-						</div>			
-					</div>
-					<?php } ?>
-
-					<?php	
-						if($res['foodname'] == "Spicy Wings")
-						{
-					?>
-					<div class="col-md-3">
-						<div class="panel panel-default">
-							<div class="panel-heading text-center">
-								<b>Spicy Wings</b>
-							</div>
-							<div class="panel-body">
-								<img src="img/chicken-wings.jpg" height="300px" width="100%">
-							</div>
-							<span style="font-family: 'Miriam Libre', sans-serif; font-size:28px;color:#CB202D;"><?php echo $res['fld_name']; ?></span>
-							<br>
-							<span style="color:black; font-size:20px; white-space:nowrap;">Price: $<?php echo $res['cost']; ?></span>
-							<br>
-							<span style="color:black; font-size:20px; white-space:nowrap;">Quantity: 
-								<input type="number" name="foodqty" min="0" max="20" step="1" value="0" style="font-size:20px;"></span>
-							<br><br>
-							<form method="post">
-								<div align="right">
-								<span style="color:black; font-size:20px; white-space:nowrap;">Add to cart: </span>
-								<button type="submit" name="addtocart" value="<?php echo $res['food_id'];?>")" >
-								<span style="color:green; font-size:25px;"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span></button>
-								</div>
-							<form>
-						</div>			
-					</div>
-					<?php } ?>
+				
 			<?php } ?>
 		</div>
 		<!--Lunch meals end-->
