@@ -1,14 +1,8 @@
 <?php
-
 	//$food_id=$_GET['food_id'];
-	
-
-    header( "refresh:5;url=food.php" );
- 
-
-	
-
+    header( "refresh:5;url=food.php" );	
 ?>
+
 <html>
   <head>
      <title>Admin control panel</title>
@@ -64,8 +58,6 @@ function timer() {
     t = setTimeout(add, 1000);
 }
 timer();
-
-
 
 </script>
 

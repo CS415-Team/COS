@@ -15,10 +15,10 @@ else
 	$cust_id="";
 }
 
-$query=mysqli_query($con,"select  tblvendor.fld_name,tblvendor.fldvendor_id,tblvendor.fld_email,
-tblvendor.fld_mob,tblvendor.fld_address,tblvendor.fld_logo,tbfood.food_id,tbfood.foodname,tbfood.cost,
+$query=mysqli_query($con,"select  tblmanager.fld_name,tblmanager.fldmanager_id,tblmanager.fld_email,
+tblmanager.fld_mob,tblmanager.fld_address,tblmanager.fld_logo,tbfood.food_id,tbfood.foodname,tbfood.cost,
 tbfood.cuisines,tbfood.paymentmode 
-from tblvendor inner join tbfood on tblvendor.fldvendor_id=tbfood.fldvendor_id;");
+from tblmanager inner join tbfood on tblmanager.fldmanager_id=tbfood.fldmanager_id;");
 while($row=mysqli_fetch_array($query))
 {
 	$arr[]=$row['food_id'];
@@ -50,7 +50,7 @@ while($row=mysqli_fetch_array($query))
 	 session_destroy();
 	 header("location:index.php");
  }
- $query=mysqli_query($con,"select tbfood.foodname,tbfood.fldvendor_id,tbfood.cost,tbfood.cuisines,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id from tbfood inner  join tblcart on tbfood.food_id=tblcart.fld_product_id where tblcart.fld_customer_id='$cust_id'");
+ $query=mysqli_query($con,"select tbfood.foodname,tbfood.fldmanager_id,tbfood.cost,tbfood.cuisines,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id from tbfood inner  join tblcart on tbfood.food_id=tblcart.fld_product_id where tblcart.fld_customer_id='$cust_id'");
   $re=mysqli_num_rows($query);
 ?>
 <html>

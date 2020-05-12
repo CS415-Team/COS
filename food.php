@@ -4,60 +4,74 @@ include("connection.php");
 extract($_REQUEST);
 if(isset($_SESSION['id']))
 {
- $id=$_SESSION['id'];
- $vq=mysqli_query($con,"select * from tblvendor where fld_email='$id'");
- $vr=mysqli_fetch_array($vq);
- $vrid=$vr['fldvendor_id'];
+	$id=$_SESSION['id'];
+	$mq=mysqli_query($con,"select * from tblmanager where fld_email='$id'");
+	$mr=mysqli_fetch_array($mq);
+	$mrid=$mr['fldmanager_id'];
 }
 
 if(!isset($_SESSION['id']))
 {
-	header("location:vendor_login.php?msg=Please Login To continue");
+	header("location:manager_login.php?msg=Please Login To continue");
 }
 else
 {
-$query=mysqli_query($con,"select * from tblvendor   where fld_email='$id'");
-if(mysqli_num_rows($query))
-{   if(!file_exists("image/restaurant/".$id."/foodimages"))
-	{
-		$dir=mkdir("image/restaurant/".$id."/foodimages");
-	}
-	$row=mysqli_fetch_array($query);
-    $v_id=$row['fldvendor_id'];
-}
-else
-{
-	
-	header("location:index.php");
-}
-}
-
-
-if(isset($add))
-{   if(isset($_SESSION['id']))
-	{
-    $img_name=$_FILES['food_pic']['name'];
-    if(!empty($chk)) 
-	{
-	$paymentmode=implode(",",$chk);
-	if(mysqli_query($con,"insert into tbfood(fldvendor_id,foodname,cost,cuisines,paymentmode,fldimage) values
-	
-	('$v_id','$food_name','$cost','$cuisines','$paymentmode','$img_name')"))
-	{
-		move_uploaded_file($_FILES['food_pic']['tmp_name'],"image/restaurant/$id/foodimages/".$_FILES['food_pic']['name']);
-	}
-	else{
-		echo "failed";
-	}
-  }
-  else 
-  {
-	  $paymessage="please select a payment mode";
-  }
+	$query=mysqli_query($con,"select * from tblmanager where fld_email='$id'");
+	if(mysqli_num_rows($query))
+	{   if(!file_exists("image/restaurant/".$id."/foodimages"))
+		{
+			$dir=mkdir("image/restaurant/".$id."/foodimages");
+		}
+		$row=mysqli_fetch_array($query);
+		$m_id=$row['fldmanager_id'];
 	}
 	else
 	{
-		header("location:vendor_login.php");
+		
+		header("location:index.php");
+	}
+}
+
+if(isset($add))
+{ 
+	if(isset($_SESSION['id']))
+	{
+		$img_name=$_FILES['food_pic']['name'];
+		if(!empty($chk))
+		{
+		
+		$fdt=implode(",",$chk);
+		
+		if(mysqli_query($con,"insert into tbfood(fldmanager_id,foodname,cost,cuisines,fldimage,food_time,qty_available) values
+		('$m_id','$food_name','$cost','$cuisines','$img_name','$fdt','$qty_avail')"))
+		{
+			move_uploaded_file($_FILES['food_pic']['tmp_name'],"image/restaurant/$id/foodimages/".$_FILES['food_pic']['name']);
+		}
+		else{
+			echo "failed";
+		}
+		/*if(!empty($chk)) 
+		{
+			$paymentmode=implode(",",$chk);
+			if(mysqli_query($con,"insert into tbfood(fldmanager_id,foodname,cost,cuisines,paymentmode,fldimage,food_time,qty_available) values
+			('$m_id','$food_name','$cost','$cuisines','$paymentmode','$img_name','$fdt','$qty_avail')"))
+			{
+				move_uploaded_file($_FILES['food_pic']['tmp_name'],"image/restaurant/$id/foodimages/".$_FILES['food_pic']['name']);
+			}
+			else{
+				echo "failed";
+			}
+		}
+		*/
+		}
+		else 
+		{
+			$foodmessage="please select a food time";
+		}
+	}
+	else
+	{
+		header("location:manager_login.php");
 	}
 }
 
@@ -72,7 +86,7 @@ if(isset($upd_account))
 					//echo $fn;
 					//echo $emm;
 					//echo $add;
-					if(mysqlI_query($con,"update tblvendor set fld_name='$fn',fld_email='$emm',fld_address='$add',fld_mob='$mob',fld_password='$pwsd' where fld_email='$id'"))
+					if(mysqlI_query($con,"update tblmanager set fld_name='$fn',fld_email='$emm',fld_address='$add',fld_mob='$mob',fld_password='$pwsd' where fld_email='$id'"))
 				   {
 						 header("location:infoUpdate.php");
 					}
@@ -81,12 +95,12 @@ if(isset($upd_account))
 			  {
 				  if(isset($_SESSION['id']))
 				  {
-				  $log_img=mysqli_query($con,"select * from tblvendor where fld_email='$id'");
+				  $log_img=mysqli_query($con,"select * from tblmanager where fld_email='$id'");
                   $log_img_row=mysqli_fetch_array($log_img);
 				  $old_logo=$log_img_row['fld_logo'];
 				  $new_img_name=$_FILES['logo_pic']['name'];
 				  
-				  if(mysqli_query($con,"update tblvendor set fld_logo='$new_img_name' where fld_email='$id'"))
+				  if(mysqli_query($con,"update tblmanager set fld_logo='$new_img_name' where fld_email='$id'"))
 				  {
 					  unlink("image/restaurant/$id/$old_logo");
 					  move_uploaded_file($_FILES['logo_pic']['tmp_name'],"image/restaurant/$id/".$_FILES['logo_pic']['name']);
@@ -97,7 +111,7 @@ if(isset($upd_account))
 			  }
 			  else
 			  {
-				  header("location:vendor_login.php?msg=Please Login To continue");
+				  header("location:manager_login.php?msg=Please Login To continue");
 			  }
 			  }
 			  
@@ -106,23 +120,30 @@ if(isset($upd_account))
 <html>
 <head>
   <title>Add New Food Items</title>
-	<!--bootstrap files-->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	<!--bootstrap files-->
-
-	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
-	<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Permanent+Marker" rel="stylesheet">
+	 <!--bootstrap files-->
+	 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	  <!--bootstrap files-->
+	 
+	 <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+     <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+	 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	 <link href="https://fonts.googleapis.com/css?family=Great+Vibes|Permanent+Marker" rel="stylesheet">
 
 	 <style>
-		ul li{}
-		ul li a {color:white;padding:40px; }
-		ul li a:hover {color:white;}
+		ul li{list-style:none;}
+		ul li a {color:black;text-decoration:none; }
+		ul li a:hover {color:black;text-decoration:none; }
+
+		#footer {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			height: 6rem;/* Footer height */
+		}
 	 </style>
 
 </head>
@@ -141,7 +162,7 @@ if(isset($upd_account))
 	if(!empty($id))
 	{
 	?>
-	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user"><?php if(isset($id)) { echo $vr['fld_name']; }?></i></a>
+	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user"><?php if(isset($id)) { echo $mr['fld_name']; }?></i></a>
 	<?php
 	}
 	?>
@@ -153,26 +174,6 @@ if(isset($upd_account))
       <ul class="navbar-nav ml-auto">
 	  <li class="nav-item active">
 		<a class="nav-link" href="index.php" style="color:black;font-weight:700">Home</a>
-		</li>
-
-		<li class="nav-item dropright">
-			<a class="nav-link dropdown-toggle" href="#" style="color:#063344;font-weight:650" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			Menus
-			</a>
-			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="border:1px solid black;">
-			<div class="dropdown-header" align="center" 
-				style="background-color:#0197A5; color:white; font-family: 'Times New Roman'; font-style:italic; font-weight:bold;">
-				MEAL TYPE
-			</div>
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="#breakfast">Breakfast Specials</a>
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="#lunch">Lunch Specials</a>
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="#">Dinner Specials</a>
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="menu.php">All</a>
-			</div>
 		</li>
 
 		<li class="nav-item">
@@ -190,14 +191,14 @@ if(isset($upd_account))
 			if(empty($_SESSION['id']))
 			{
 			?>
-		   <button class="btn btn-danger my-2 my-sm-0" name="login">Log In</button>&nbsp;&nbsp;&nbsp;
+		   <button class="btn btn-success my-2 my-sm-0" name="login">Log In</button>&nbsp;&nbsp;&nbsp;
             <?php
 			}
 			else
 			{
 			?>
 			
-			<button class="btn btn-success my-2 my-sm-0" name="logout" type="submit">Log Out</button>&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-danger my-2 my-sm-0" name="logout" type="submit">Log Out</button>&nbsp;&nbsp;&nbsp;
 			<?php
 			}
 			?>
@@ -215,236 +216,281 @@ if(isset($upd_account))
 
 
 <br><br>
-<div class="middle" style=" padding:40px; border:0px solid #0197A5;  width:100%; margin-top:50px;">
-       <!--tab heading-->
-	   <ul class="nav nav-tabs nabbar_inverse" id="myTab" style="background:#0197A5;border-radius:10px 10px 10px 10px;" role="tablist">
-          <li class="nav-item">
-             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#viewitem" role="tab" aria-controls="home" aria-selected="true">Manage Products</a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#manageaccount" role="tab" aria-controls="profile" aria-selected="false">Add Products</a>
-          </li>
-		  <li class="nav-item">
-              <a class="nav-link" id="accountsettings-tab" data-toggle="tab" href="#accountsettings" role="tab" aria-controls="accountsettings" aria-selected="false">Account Settings</a>
-          </li>
-		  
-		  <li class="nav-item">
-              <a class="nav-link" id="logo-tab" data-toggle="tab" href="#logo" role="tab" aria-controls="logo" aria-selected="false">Update Logo</a>
-          </li>
-		  <li class="nav-item">
-              <a class="nav-link" id="status-tab" data-toggle="tab" href="#status" role="tab" aria-controls="status" aria-selected="false">Order Status</a>
-          </li>
-		  
-       </ul>
-	   <br><br>
-	   <span style="color:green;"><?php if(isset($msgs)) { echo $msgs; }?></span>
-	<!--tab 1 starts-->   
-	   <div class="tab-content" id="myTabContent">
-	   
-            <div class="tab-pane fade show active" id="viewitem" role="tabpanel" aria-labelledby="home-tab">
-                 <div class="container"> 
-			 <table border="1" bordercolor="#F0F0F0" cellpadding="20px">
-			 <th><!--food Image--></th>
-			 <th>Item</th>
-			 <th>Price($)</th>
-			 <th>Cuisine </th>
-			 <th>Payment Mode  </th>
-			 <th>Delete Item   </th>
-			 <th>Update item Details </th>
-			   <?php
-					  if($query=mysqli_query($con,"select tblvendor.fldvendor_id,tblvendor.fld_email,tbfood.food_id,tbfood.foodname,tbfood.cost,tbfood.paymentmode,tbfood.cuisines,tbfood.fldimage,tblvendor.fld_name from tblvendor inner join tbfood on tblvendor.fldvendor_id=tbfood.fldvendor_id where tblvendor.fld_email='$id'"))
-					  {
-						  if(mysqli_num_rows($query))
-						  {
-						 while($row=mysqli_fetch_array($query))
-						 {
-							 
-							 ?>
-			     <tr>
-				 				 
-				<td><img src="<?php echo 'image/restaurant/'.$id.'/foodimages/'.$row['fldimage'];?>" height="100px" width="150px"></td>
-				<td style="width:150px;"><?php  echo $row['foodname']."<br>";?></td>
-				<td align="center" style="width:150px;"><?php  echo $row['cost']."<br>";?></td>
-				<td  align="center" style="width:150px;"><?php  echo $row['cuisines']."<br>";?></td>
-				<td align="center" style="width:150px;"><?php  echo $row['paymentmode']."<br>";?></td>
-				
-				<td align="center" style="width:150px;">
-				
-				<a href="vendor_delete_food.php?food_id=<?php echo $row['food_id'];?>"><button type="button" class="btn btn-warning">Delete </button></a>
-				
-				</td>
-				<td align="center" style="width:150px;">
-				
-				<a href="update.php?food_id=<?php echo $row['food_id'];?>"><button type="button" class="btn btn-danger">Update </button></a>
-				
-				</td>
-				</tr>
-				
-				<?php 
-					
-                    $foodname="";
-                    $cuisines="";
-                    $cost="";					
-						 }
-					  }
-					  else 
-						  
-						  {
-							   $msg="please add some Items";
-						  }
-					  }
-					  else 
-					  {
-						  echo "failed";
-					  }
-					  
-					  ?>
-			 </table>
-			 </div>    	 
-	        </div>
-<!--tab 1 ends-->	   
+<div style="position: relative;  min-height: 100vh;"><!--Container Div-->
+<div id="content-wrap" style="padding-bottom: 6rem;"><!-- all other page content -->
+	<div class="middle" style=" padding:40px; border:0px solid #0197A5;  width:100%; margin-top:50px;">
+		<!--tab heading-->
+		<ul class="nav nav-tabs nabbar_inverse" id="myTab" style="background:#0197A5;border-radius:10px 10px 10px 10px;" role="tablist">
+			<li class="nav-item">
+				<a class="nav-link active" id="home-tab" data-toggle="tab" href="#viewitem" role="tab" aria-controls="home" aria-selected="true" style="color:#063344;font-weight:650;">Manage Products</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="profile-tab" data-toggle="tab" href="#manageaccount" role="tab" aria-controls="profile" aria-selected="false" style="color:#063344;font-weight:650;">Add Products</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="accountsettings-tab" data-toggle="tab" href="#accountsettings" role="tab" aria-controls="accountsettings" aria-selected="false" style="color:#063344;font-weight:650;">Account Settings</a>
+			</li>
 			
+			<li class="nav-item">
+				<a class="nav-link" id="logo-tab" data-toggle="tab" href="#logo" role="tab" aria-controls="logo" aria-selected="false" style="color:#063344;font-weight:650;">Update Logo</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="status-tab" data-toggle="tab" href="#status" role="tab" aria-controls="status" aria-selected="false" style="color:#063344;font-weight:650;">Order Status</a>
+			</li>
 			
-			<!--tab 2 starts-->
-            <div class="tab-pane fade" id="manageaccount" role="tabpanel" aria-labelledby="profile-tab">
-			         <!--add Product-->
-                        <form action="" method="post" enctype="multipart/form-data">
-                                     <div class="form-group"><!--food_name-->
-                                     <label for="food_name">Food Name:</label>
-                                            <input type="text" class="form-control" id="food_name" value="<?php if(isset($food_name)) { echo $food_name;}?>" placeholder="Enter Food Name" name="food_name" required>
-                                     </div>
-									 
-									 
-                                     <div class="form-group"><!--cost-->
-                                            <label for="cost">Cost :</label>
-                                            <input type="number" class="form-control" id="cost"  value="<?php if(isset($cost)) { echo $cost;}?>" placeholder="10000" name="cost" required>
-                                     </div>
-									 
-									 
-	                                 <div class="form-group"><!--cuisines-->
-                                            <label for="cuisines">Cuisines :</label>
-                                            <input type="text" class="form-control" id="cuisines" value="<?php if(isset($cuisines)) { echo $cuisines;}?>" placeholder="Enter Cuisines" name="cuisines" required>
-                                    </div>
-							        
-							        <div class="form-group"><!--payment_mode-->
-                                         <input type="checkbox" name="chk[]" value="COD"/>Cash On Delivery
-			                             <input type="checkbox" name="chk[]" value="Online Payment"/>Online Payment
-								         <br>
-								        <span style="color:red;"><?php if(isset($paymessage)){ echo $paymessage;}?></span>
-			      			        </div>
-							   
-	                                <div class="form-group">
-                                         <input type="file" accept="image/*" name="food_pic" required/>Food Snaps 
-                                    </div>
-   
-                                    <button type="submit" name="add" class="btn btn-primary">ADD Item</button>
-									<br>
-									<span style="color:red;"><?php if (isset($msg)){ echo $msg;}?></span>
-                               </form>
-				   
-			</div>
-			<!--tab 2 ends-->
-			
-			
-			 <!--tab 3-- starts-->
-			 <div class="tab-pane fade" id="accountsettings" role="tabpanel" aria-labelledby="accountsettings-tab">
-			    <form method="post" enctype="multipart/form-data">
+		</ul>
+		<br><br>
+		<span style="color:green;"><?php if(isset($msgs)) { echo $msgs; }?></span>
+		<!--tab 1 starts-->   
+		<div class="tab-content" id="myTabContent">
+		
+				<div class="tab-pane fade show active" id="viewitem" role="tabpanel" aria-labelledby="home-tab">
+					<div class="container"> 
+				<table border="1" bordercolor="#F0F0F0" cellpadding="20px">
+				<th><!--food Image--></th>
+				<th>Item</th>
+				<th>Price($)</th>
+				<th>Cuisine </th>
+				<th>Meal Type </th>
+				<!-- <th>Payment Mode  </th>-->
+				<th style="text-align:center;">Quantity Available</th>
+				<th>Delete Item   </th>
+				<th>Update item Details </th>
 				<?php
-			    $upd_info=mysqli_query($con,"select * from tblvendor where fld_email='$id'");
-				$upd_info_row=mysqlI_fetch_array($upd_info);
-				 $nm=$upd_info_row['fld_name'];
-				 $emm=$upd_info_row['fld_email'];
-				 $log=$upd_info_row['fld_logo'];
-				$ad=$upd_info_row['fld_address'];
-				$mb=$upd_info_row['fld_mob'];
-				$psd=$upd_info_row['fld_password'];
-				
-				?>
-				
-                    <div class="form-group">
-                      <label for="name">Name</label>
-                      <input type="text" id="username" value="<?php if(isset($nm)){ echo $nm;}?>" class="form-control" name="fn" />
-                    </div>
-					<div class="form-group">
-                      <label for="email">Email</label>
-                      <input type="text" id="email" value="<?php if(isset($emm)){ echo $emm;}?>" class="form-control" name="emm" readonly="readonly"/>
-                    </div>
-					<div class="form-group">
-                      <label for="address">Address</label>
-                      <input type="text" id="address" value="<?php if(isset($ad)){ echo $ad;}?>" class="form-control" name="add" required/>
-                    </div>
-					<div class="form-group">
-                      <label for="mobile">Address</label>
-                      <input type="text" id="mobile" pattern="[6-9]{1}[0-9]{9}" value="<?php if(isset($mb)){ echo $mb;}?>" class="form-control" name="mob" required/>
-                    </div>
+						if($query=mysqli_query($con,"select tblmanager.fldmanager_id,tblmanager.fld_email,tbfood.food_id,tbfood.foodname,tbfood.cost, tbfood.qty_available, tbfood.food_time,tbfood.paymentmode,tbfood.cuisines,tbfood.fldimage,tblmanager.fld_name from tblmanager inner join tbfood on tblmanager.fldmanager_id=tbfood.fldmanager_id where tblmanager.fld_email='$id'"))
+						{
+							if(mysqli_num_rows($query))
+							{
+							while($row=mysqli_fetch_array($query))
+							{
+								
+								?>
+					<tr>
+									
+					<td><img src="<?php echo 'image/restaurant/'.$id.'/foodimages/'.$row['fldimage'];?>" height="100px" width="150px"></td>
+					<td style="width:150px;"><?php  echo $row['foodname']."<br>";?></td>
+					<td align="center" style="width:150px;"><?php  echo $row['cost']."<br>";?></td>
+					<td align="center" style="width:150px;"><?php  echo $row['cuisines']."<br>";?></td>
+					<td align="center" style="width:150px;"><?php echo $row['food_time']."<br>"; ?></td>
+					<td align="center" style="width:150px;"><?php echo $row['qty_available']."<br>"; ?></td>
+					<!--<td align="center" style="width:150px;"></?php  echo $row['paymentmode']."<br>";?></td>-->
 					
-                   <div class="form-group">
-                      <label for="pwd">Password:</label>
-                     <input type="password" name="pwsd" class="form-control" value="<?php if(isset($psd)){ echo $psd;}?>" id="pwd" required/>
-                   </div>
-				   
-				   
- 
-                  <button type="submit" name="upd_account" style="background:#ED2553; border:1px solid #ED2553;" class="btn btn-primary">Update</button>
-                  
-			 </form>
-			</div>
-			<div class="tab-pane fade" id="logo" role="tabpanel" aria-labelledby="logo-tab">
-                <div class="container">
-				    <form class="form" method="post" enctype="multipart/form-data">
-				       <input type="file" name="logo_pic" accept="image/*" required/>
-					   <button type="submit" name="upd_logo" class="btn btn-outline-primary">Update Logo</button>
-			        </form>
-				</div>
-			</div>
-			 <div class="tab-pane fade " id="status" role="tabpanel" aria-labelledby="status-tab">
-	            <table class="table">
-				<tbody>
-				<th>Order Id</th>
-				<th>Customer Email</th>
-				<th>Food Id</th>
-				<th>Order Status</th>
-				<th>Update Status</th>
-				<?php
-				$orderquery=mysqli_query($con,"select * from tblorder where fldvendor_id='$vrid'");
-				if(mysqli_num_rows($orderquery))
-				{
-					while($orderrow=mysqli_fetch_array($orderquery))
-					{
-						$stat=$orderrow['fldstatus'];
+					<td align="center" style="width:150px;">
+					
+					<a href="manager_delete_food.php?food_id=<?php echo $row['food_id'];?>"><button type="button" class="btn btn-warning">Delete </button></a>
+					
+					</td>
+					<td align="center" style="width:150px;">
+					
+					<a href="update.php?food_id=<?php echo $row['food_id'];?>"><button type="button" class="btn btn-danger">Update </button></a>
+					
+					</td>
+					</tr>
+					
+					<?php 
+						
+						$foodname="";
+						$cuisines="";
+						$cost="";					
+						$qty_avail="";
+						}
+						}
+						else 
+							
+							{
+								$msg="please add some Items";
+							}
+						}
+						else 
+						{
+							echo "failed";
+						}
+						
 						?>
-						<tr>
-						<td><?php echo $orderrow['fld_order_id']; ?></td>
-						<td><?php echo $orderrow['fld_email_id']; ?></td>
-						<td><?php echo $orderrow['fld_food_id']; ?></td>
-						<?php
-			   if($stat=="cancelled" || $stat=="Out Of Stock")
-			   {
-			   ?>
-			   <td><i style="color:orange;" class="fas fa-exclamation-triangle"></i>&nbsp;<span style="color:red;"><?php echo $orderrow['fldstatus']; ?></span></td>
-			   <?php
-			   }
-			   else
-				   
-			   {
-			   ?>
-			   <td><span style="color:green;"><?php echo $orderrow['fldstatus']; ?></span></td>
-			   <?php
-			   }
-			   ?>
-						<form method="post">
-						<td><a href="changestatus.php?order_id=<?php echo $orderrow['fld_order_id']; ?>"><button type="button" name="changestatus">Update Status</button></a></td>
+				</table>
+				</div>    	 
+				</div>
+				<!--tab 1 ends-->	   
+				
+				<!--tab 2 starts-->
+				<div class="tab-pane fade" id="manageaccount" role="tabpanel" aria-labelledby="profile-tab">
+						<!--add Product-->
+							<form action="" method="post" enctype="multipart/form-data">
+										<div class="form-group"><!--food_name-->
+										<label for="food_name">Food Name:</label>
+												<input type="text" class="form-control" id="food_name" value="<?php if(isset($food_name)) { echo $food_name;}?>" placeholder="Enter Food Name" name="food_name" required>
+										</div>
+										
+										
+										<div class="form-group"><!--cost-->
+												<label for="cost">Cost :</label>
+												<input type="number" class="form-control" id="cost"  value="<?php if(isset($cost)) { echo $cost;}?>" placeholder="0" name="cost" required>
+										</div>
+
+										<div class="form-group"><!--Quantity Available-->
+												<label for="cost">Quantity Available :</label>
+												<input type="number" class="form-control" id="qty_avail"  value="<?php if(isset($qty_avail)) { echo $qty_avail;}?>" placeholder="0" name="qty_avail" required>
+										</div>	 
+										
+										<div class="form-group"><!--cuisines-->
+												<label for="cuisines">Cuisines :</label>
+												<input type="text" class="form-control" id="cuisines" value="<?php if(isset($cuisines)) { echo $cuisines;}?>" placeholder="Enter Cuisines" name="cuisines" required>
+										</div>
+										<!--
+										<div class="form-group">
+											<input type="checkbox" name="chk[]" value="COD"/>Cash On Delivery
+											<input type="checkbox" name="chk[]" value="Online Payment"/>Online Payment
+											<br>
+											<span style="color:red;"></?php if(isset($paymessage)){ echo $paymessage;}?></span>
+										</div>
+										-->
+										<div class="form-group"><!--foodtype-->
+											<input type="checkbox" name="chk[]" value="breakfast"/>Breakfast
+											<input type="checkbox" name="chk[]" value="regular"/>Lunch
+											<input type="checkbox" name="chk[]" value="dinner"/>Dinner
+											<br>
+											<span style="color:red;"><?php if(isset($foodmessage)){ echo $foodmessage;}?></span>
+										</div>
+
+								
+										<div class="form-group">
+											<input type="file" accept="image/*" name="food_pic" required/>Food Snaps 
+										</div>
+	
+										<button type="submit" name="add" class="btn btn-primary">ADD Item</button>
+										<br>
+										<span style="color:red;"><?php if (isset($msg)){ echo $msg;}?></span>
+								</form>
+					
+				</div>
+				<!--tab 2 ends-->
+				
+				
+				<!--tab 3-- starts-->
+				<div class="tab-pane fade" id="accountsettings" role="tabpanel" aria-labelledby="accountsettings-tab">
+					<form method="post" enctype="multipart/form-data">
+					<?php
+					$upd_info=mysqli_query($con,"select * from tblmanager where fld_email='$id'");
+					$upd_info_row=mysqlI_fetch_array($upd_info);
+					$nm=$upd_info_row['fld_name'];
+					$emm=$upd_info_row['fld_email'];
+					$log=$upd_info_row['fld_logo'];
+					$ad=$upd_info_row['fld_address'];
+					$mb=$upd_info_row['fld_mob'];
+					$psd=$upd_info_row['fld_password'];
+					
+					?>
+					
+						<div class="form-group">
+						<label for="name">Name</label>
+						<input type="text" id="username" value="<?php if(isset($nm)){ echo $nm;}?>" class="form-control" name="fn" />
+						</div>
+						<div class="form-group">
+						<label for="email">Email</label>
+						<input type="text" id="email" value="<?php if(isset($emm)){ echo $emm;}?>" class="form-control" name="emm" readonly="readonly"/>
+						</div>
+						<div class="form-group">
+						<label for="address">Address</label>
+						<input type="text" id="address" value="<?php if(isset($ad)){ echo $ad;}?>" class="form-control" name="add" required/>
+						</div>
+						<div class="form-group">
+						<label for="mobile">Contact</label>
+						<input type="text" id="mobile" pattern="[6-9]{1}[0-9]{9}" value="<?php if(isset($mb)){ echo $mb;}?>" class="form-control" name="mob" required/>
+						</div>
+						
+					<div class="form-group">
+						<label for="pwd">Password:</label>
+						<input type="password" name="pwsd" class="form-control" value="<?php if(isset($psd)){ echo $psd;}?>" id="pwd" required/>
+					</div>
+					
+					
+	
+					<button type="submit" name="upd_account" style="background:#ED2553; border:1px solid #ED2553;" class="btn btn-primary">Update</button>
+					
+				</form>
+				</div>
+				<div class="tab-pane fade" id="logo" role="tabpanel" aria-labelledby="logo-tab" >
+					<div class="container">
+						<form class="form" method="post" enctype="multipart/form-data">
+						<input type="file" name="logo_pic" accept="image/*" required/>
+						<button type="submit" name="upd_logo" class="btn btn-outline-primary">Update Logo</button>
 						</form>
-						<tr>
-						<?php
-					}
+					</div>
+				</div>
+				<div class="tab-pane fade " id="status" role="tabpanel" aria-labelledby="status-tab">
+					<table class="table">
+					<tbody>
+					<th>Order Id</th>
+					<th>Customer Email</th>
+					<th>Staff Id</th>
+					<th>Food Ordered</th>
+					<th>Quantity</th>
+					<th>Delivery Location</th>
+					<th>Delivery Date</th>
+					<th>Delivery Time</th>
+					<th>Order Status</th>
+					<th>Update Status</th>
+					<?php
+					$orderquery=mysqli_query($con,"select * from tblorder where fldmanager_id='$mrid'");
+					if(mysqli_num_rows($orderquery))
+					{
+						while($orderrow=mysqli_fetch_array($orderquery))
+						{
+							$stat=$orderrow['fldstatus'];
+							?>
+							<tr>
+							<td><?php echo $orderrow['fld_order_id']; ?></td>
+							<td><?php echo $orderrow['fld_email_id']; ?></td>
+							<td><?php echo $orderrow['staff_id']; ?></td>
+
+							<?php $f_id = $orderrow['fld_food_id'];
+								$foodquery=mysqli_query($con,"select foodname from tbfood where food_id='$f_id'");
+								while($foodrow=mysqli_fetch_array($foodquery))
+								{
+							?>
+								<td><?php echo $foodrow['foodname']; ?></td>
+							<?php } ?>		
+
+							<td><?php echo $orderrow['fld_product_quantity']; ?></td>
+							<td><?php echo $orderrow['delivery_location']; ?></td>
+							<td><?php echo $orderrow['delivery_date']; ?></td>
+							<td><?php echo $orderrow['delivery_time']; ?></td>
+
+
+							<?php
+				if($stat=="cancelled" || $stat=="Out Of Stock")
+				{
+				?>
+				<td><i style="color:orange;" class="fas fa-exclamation-triangle"></i>&nbsp;<span style="color:red;"><?php echo $orderrow['fldstatus']; ?></span></td>
+				<?php
+				}
+				else
+					
+				{
+				?>
+				<td><span style="color:green;"><?php echo $orderrow['fldstatus']; ?></span></td>
+				<?php
 				}
 				?>
-				</tbody>
-				</table>
-			 </div>
-	  </div>
-	</div>  
-	
+							<form method="post">
+							<td><a href="changestatus.php?order_id=<?php echo $orderrow['fld_order_id']; ?>"><button type="button" name="changestatus">Update Status</button></a></td>
+							</form>
+							<tr>
+							<?php
+						}
+					}
+					?>
+					</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div> <!--Page content ends-->
+		<footer id="footer">
+			<?php
+				include("footer.php");
+			?>
+		</footer>
+	</div><!--Container Div ends-->  
 </body>
 </html>
