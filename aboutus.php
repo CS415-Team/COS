@@ -7,18 +7,27 @@ $arr=array();
 if(isset($_SESSION['cust_id']))
 {
 	 $cust_id=$_SESSION['cust_id'];
-	 $qq=mysqli_query($con,"select * from tblcustomer where fld_email='$cust_id'");
-	 $qqr= mysqli_fetch_array($qq);
+	 $cquery=mysqli_query($con,"select * from tblcustomer where fld_email='$cust_id'");
+	 $cresult=mysqli_fetch_array($cquery);
+	 $staff_id="";
+}
+else if(isset($_SESSION['staff_id']))
+{
+	$staff_id=$_SESSION['staff_id'];
+	$squery=mysqli_query($con,"select * from tblstaff where staff_id='$staff_id'");
+	$sresult=mysqli_fetch_array($squery);
+	$cust_id="";
 }
 else
 {
 	$cust_id="";
+	$staff_id="";
 }
 
-$query=mysqli_query($con,"select  tblvendor.fld_name,tblvendor.fldvendor_id,tblvendor.fld_email,
-tblvendor.fld_mob,tblvendor.fld_address,tblvendor.fld_logo,tbfood.food_id,tbfood.foodname,tbfood.cost,
+$query=mysqli_query($con,"select  tblmanager.fld_name,tblmanager.fldmanager_id,tblmanager.fld_email,
+tblmanager.fld_mob,tblmanager.fld_address,tblmanager.fld_logo,tbfood.food_id,tbfood.foodname,tbfood.cost,
 tbfood.cuisines,tbfood.paymentmode 
-from tblvendor inner join tbfood on tblvendor.fldvendor_id=tbfood.fldvendor_id;");
+from tblmanager inner join tbfood on tblmanager.fldmanager_id=tbfood.fldmanager_id;");
 while($row=mysqli_fetch_array($query))
 {
 	$arr[]=$row['food_id'];
@@ -27,19 +36,17 @@ while($row=mysqli_fetch_array($query))
 
 //print_r($arr);
 
- if(isset($addtocart))
- {
-	 
-	if(!empty($_SESSION['cust_id']))
-	{
-		 $_SESSION['cust_id']=$cust_id;
-		header("location:form/cart.php?product=$addtocart");
-	}
-	else
-	{
-		header("location:form/?product=$addtocart");
-	}
- }
+if(isset($addtocart))
+{
+   if(!empty($_SESSION['cust_id']) || !empty($_SESSION['staff_id']))
+   {
+	   header("location:form/cart.php?product=$addtocart");
+   }
+   else
+   {
+	   header("location:form/?product=$addtocart");
+   }
+}
  
  if(isset($login))
  {
@@ -50,7 +57,7 @@ while($row=mysqli_fetch_array($query))
 	 session_destroy();
 	 header("location:index.php");
  }
- $query=mysqli_query($con,"select tbfood.foodname,tbfood.fldvendor_id,tbfood.cost,tbfood.cuisines,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id from tbfood inner  join tblcart on tbfood.food_id=tblcart.fld_product_id where tblcart.fld_customer_id='$cust_id'");
+ $query=mysqli_query($con,"select tbfood.foodname,tbfood.fldmanager_id,tbfood.cost,tbfood.cuisines,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id from tbfood inner  join tblcart on tbfood.food_id=tblcart.fld_product_id where tblcart.fld_customer_id='$cust_id'");
   $re=mysqli_num_rows($query);
 ?>
 <html>
@@ -146,14 +153,24 @@ ul li {list-style:none;}
 		<span style="color:white;font-family: 'Permanent Marker', cursive;font-size:12pt;">Food Ordering System</span>
 	</a>
 			
-    <?php
+	<?php
 	if(!empty($cust_id))
 	{
 	?>
-	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user"><?php if(isset($cust_id)) { echo $qqr['fld_name']; }?></i></a>
+	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user"><?php echo $cresult['fld_name']; ?></i></a>
 	<?php
 	}
 	?>
+
+	<?php
+	if(!empty($staff_id))
+	{
+	?>
+	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user"><?php echo $sresult['staff_name']; ?></i></a>
+	<?php
+	}
+	?>
+
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -174,16 +191,28 @@ ul li {list-style:none;}
                         MEAL TYPE
                     </div>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Breakfast Specials</a>
+                    <a class="dropdown-item" href="menu.php#breakfast">Breakfast Specials</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="menu.php#lunch">Lunch Specials</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Dinner Specials</a>
+                    <a class="dropdown-item" href="menu.php#dinner">Dinner Specials</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="menu.php">All</a>
                     </div>
                 </li>
 
+				<?php 
+
+				if(isset($_SESSION['staff_id']))
+
+				{ ?>
+					<li class="nav-item">
+					<a class="nav-link" href="form/subscription.php" style="color:#063344;font-weight:650">Subscription</a>
+					</li>
+				<?php
+				}
+
+			?>
         <li class="nav-item">
           <a class="nav-link" href="aboutus.php" style="color:#063344;font-weight:650">About</a>
         </li>
@@ -194,20 +223,20 @@ ul li {list-style:none;}
 		<li class="nav-item">
 		  <form method="post">
           <?php
-			if(empty($cust_id))
+			if(empty($cust_id) && empty($staff_id))
 			{
 			?>
 			<a href="form/index.php?msg=You must be logged in first"><span style="color:red; font-size:30px;"><i class="fa fa-shopping-cart" aria-hidden="true"><span style="color:red;" id="cart"  class="badge badge-light">0</span></i></span></a>
 			
 			&nbsp;&nbsp;&nbsp;
-			<button class="btn btn-danger my-2 my-sm-0" name="login" type="submit">Log In</button>&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-success my-2 my-sm-0" name="login" type="submit">Log In</button>&nbsp;&nbsp;&nbsp;
             <?php
 			}
 			else
 			{
 			?>
 			<a href="form/cart.php"><span style=" color:green; font-size:30px;"><i class="fa fa-shopping-cart" aria-hidden="true"><span style="color:green;" id="cart"  class="badge badge-light"><?php if(isset($re)) { echo $re; }?></span></i></span></a>
-			<button class="btn btn-success my-2 my-sm-0" name="logout" type="submit">Log Out</button>&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-danger my-2 my-sm-0" name="logout" type="submit">Log Out</button>&nbsp;&nbsp;&nbsp;
 			<?php
 			}
 			?>

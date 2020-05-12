@@ -4,109 +4,128 @@ include("connection.php");
 extract($_REQUEST);
 if(isset($_SESSION['id']))
 {
-if(!empty($_GET['food_id']))
-{
-	$food_id=$_GET['food_id'];
-	$query=mysqli_query($con,"select * from tbfood   where food_id='$food_id'");
-if(mysqli_num_rows($query))
-{   
-	 $row=mysqli_fetch_array($query);
-     $rfoodname=$row['foodname'];
-     $rcost=$row['cost'];
-     $rcuisines=$row['cuisines'];
-     $rpaymentmode=$row['paymentmode'];
-     $rfldimageold=$row['fldimage'];
-	 $em=$_SESSION['id'];
-	
+	if(!empty($_GET['food_id']))
+	{
+		$food_id=$_GET['food_id'];
+		$query=mysqli_query($con,"select * from tbfood where food_id='$food_id'");
+		if(mysqli_num_rows($query))
+		{   
+			$row=mysqli_fetch_array($query);
+			$rfoodname=$row['foodname'];
+			$rcost=$row['cost'];
+			$rcuisines=$row['cuisines'];
+			$rpaymentmode=$row['paymentmode'];
+			$rfldimageold=$row['fldimage'];
+			$rqty_avail=$row['qty_available'];
+			$rfood_time=$row['food_time'];
+			$em=$_SESSION['id'];
+			
+		}
+		else
+		{
+			header("location:food.php");
+		}
+	}
+	else
+	{
+		header("location:food.php");
+	}
 }
 else
 {
-	header("location:food.php");
-}
-    
-
-
-	
-}
-else
-{
-	
-	header("location:food.php");
-	
-	
-}
-}
-else
-{
-	header("location:vendor_login.php");
+	header("location:manager_login.php");
 }
 if(isset($update))
 {
    if(!empty($_SESSION['id']))	
    {
-    $paymentmode=implode(",",$chk);
-    $img_name=$_FILES['food_pic']['name'];
-    
-    
-    if(!empty($chk)) 
-	{
-		if(empty($img_name))
-			
-	       {
-		          $paymentmode=implode(",",$chk);
-	              if(mysqli_query($con,"update  tbfood  set foodname='$food_name',cost='$cost',cuisines='$cuisines',paymentmode='$paymentmode' where food_id='$food_id'"))
-	   
-	                {
-						header("location:update_food.php?food_id=$food_id");
-		              //echo "update with old pic";
-		              //move_uploaded_file($_FILES['food_pic']['tmp_name'],"../image/restaurant/$em/foodimages/".$_FILES['food_pic']['name']);
-	                 }
-	              else{
-		               echo "failed";
-	                  }
-	        }
-			
-			
+	   $img_name=$_FILES['food_pic']['name'];
+	   if(empty($img_name))
+		{
+				if(mysqli_query($con,"update tbfood set foodname='$food_name',cost='$cost',cuisines='$cuisines',paymentmode='$paymentmode', qty_available='$qty_avail', food_time='$food_time' where food_id='$food_id'"))
+				{
+					header("location:update_food.php?food_id=$food_id");
+					//echo "update with old pic";
+					//move_uploaded_file($_FILES['food_pic']['tmp_name'],"../image/restaurant/$em/foodimages/".$_FILES['food_pic']['name']);
+				}
+				else
+				{
+					echo "failed";
+				}
+			}
+		else
+		{
+				echo $food_name."<br>";
+				echo $cost."<br>";
+				echo $qty_avail."<br>";
+				echo $cuisines."<br>";
+				echo $img_name."<br>";
+				echo $food_time."<br>";
+				if(mysqli_query($con,"update  tbfood  set foodname='$food_name',cost='$cost',cuisines='$cuisines',paymentmode='$paymentmode', fldimage='$img_name', qty_available='$qty_avail', food_time='$food_time' where food_id='$food_id'"))
 	
-	     else
-		 {
-			     $paymentmode=implode(",",$chk);
-			     echo $food_name."<br>";
-			     echo $cost."<br>";
-			     echo $cuisines."<br>";
-			     echo $paymentmode."<br>";
-			     echo $img_name."<br>";
-	             if(mysqli_query($con,"update  tbfood  set foodname='$food_name',cost='$cost',cuisines='$cuisines',paymentmode='$paymentmode', fldimage='$img_name' where food_id='$food_id'"))
-	
-	                {
-		             echo "update with new pic";
-		             move_uploaded_file($_FILES['food_pic']['tmp_name'],"image/restaurant/$em/foodimages/".$_FILES['food_pic']['name']);
-	                 unlink("image/restaurant/$em/foodimages/$rfldimageold");
-					 header("location:update_food.php?food_id=$food_id");
+					{
+					echo "update with new pic";
+					move_uploaded_file($_FILES['food_pic']['tmp_name'],"image/restaurant/$em/foodimages/".$_FILES['food_pic']['name']);
+					unlink("image/restaurant/$em/foodimages/$rfldimageold");
+					header("location:update_food.php?food_id=$food_id");
 					}
-				 else
-				 {
-					 echo "failed to upload new pic";
+				else
+				{
+					echo "failed to upload new pic";
 				}					 
-		 }
-	
+		}
+		/*$paymentmode=implode(",",$chk);
+		$img_name=$_FILES['food_pic']['name'];
+    
+		if(!empty($chk)) 
+		{
+			if(empty($img_name))
+			{
+					$paymentmode=implode(",",$chk);
+					if(mysqli_query($con,"update  tbfood set foodname='$food_name',cost='$cost',cuisines='$cuisines',paymentmode='$paymentmode' where food_id='$food_id'"))
+					{
+						header("location:update_food.php?food_id=$food_id");
+						//echo "update with old pic";
+						//move_uploaded_file($_FILES['food_pic']['tmp_name'],"../image/restaurant/$em/foodimages/".$_FILES['food_pic']['name']);
+					}
+					else
+					{
+						echo "failed";
+					}
+				}
+			else
+			{
+					$paymentmode=implode(",",$chk);
+					echo $food_name."<br>";
+					echo $cost."<br>";
+					echo $cuisines."<br>";
+					echo $paymentmode."<br>";
+					echo $img_name."<br>";
+					if(mysqli_query($con,"update  tbfood  set foodname='$food_name',cost='$cost',cuisines='$cuisines',paymentmode='$paymentmode', fldimage='$img_name' where food_id='$food_id'"))
+		
+						{
+						echo "update with new pic";
+						move_uploaded_file($_FILES['food_pic']['tmp_name'],"image/restaurant/$em/foodimages/".$_FILES['food_pic']['name']);
+						unlink("image/restaurant/$em/foodimages/$rfldimageold");
+						header("location:update_food.php?food_id=$food_id");
+						}
+					else
+					{
+						echo "failed to upload new pic";
+					}					 
+			}
+		
+		}
+		else
+		{  
+			$paymessage="please select a payment mode";
+		}
+		*/
 	}
-	
 	else
 	{
-		
-		
-	
-  
-  
-	  $paymessage="please select a payment mode";
-  
-    }
-   }
-   else
-   {
-	   header("location:vendor_login.php");
-   }
+		header("location:manager_login.php");
+	}
 }
 if(isset($logout))
 {
@@ -247,24 +266,40 @@ if(isset($logout))
                                             <input type="number" class="form-control" id="cost"  value="<?php if(isset($rcost)) { echo $rcost;}?>" placeholder="10000" name="cost" required>
                                      </div>
 									 
-									 
+									<div class="form-group"><!--Quantity Available-->
+										<label for="qty_avail">Quantity Available :</label>
+										<input type="number" class="form-control" id="qty_avail" value="<?php if(isset($rqty_avail)) { echo $rqty_avail;}?>" placeholder="0" name="qty_avail" required>
+									</div>									 
+
 	                                 <div class="form-group"><!--cuisines-->
                                             <label for="cuisines">Cuisines :</label>
                                             <input type="text" class="form-control" id="cuisines" value="<?php if(isset($rcuisines)) { echo $rcuisines;}?>" placeholder="Enter Cuisines" name="cuisines" required>
                                     </div>
-							        
-							        <div class="form-group"><!--payment_mode-->
-									<?php
+
+									<div class="form-group"><!--Meal Type-->
+										<label for="Meal Type">Meal Type:</label> 
+										<select id="food_time" name="food_time">
+											<option disabled selected value=" "> Meal Type</option>
+											<option value="breakfast" <?php if(isset($rfood_time)) echo "selected";?> >Breakfast</option>
+											<option value="regular"  <?php if(isset($rfood_time)) echo "selected";?> >Lunch</option>
+											<option value="dinner" <?php if(isset($rfood_time)) echo "selected";?> >Dinner</option>
+										</select>
+									</div>
+
+							        <!--
+									<div class="form-group">
+									</?php
 			                         
 			                          $pay=explode(",",$rpaymentmode);
 			
 			                           ?>
-                                         <input type="checkbox" <?php if(in_array("COD",$pay)) { echo "checked"; } ?> name="chk[]" value="COD"/>Cash On Delivery
-			                             <input type="checkbox" <?php if(in_array("Online Payment",$pay)) { echo "checked"; } ?> name="chk[]" value="Online Payment"/>Online Payment
+                                         <input type="checkbox" </?php if(in_array("COD",$pay)) { echo "checked"; } ?> name="chk[]" value="COD"/>Cash On Delivery
+			                             <input type="checkbox" </?php if(in_array("Online Payment",$pay)) { echo "checked"; } ?> name="chk[]" value="Online Payment"/>Online Payment
 								         <br>
-								        <span style="color:red;"><?php if(isset($paymessage)){ echo $paymessage;}?></span>
+								        <span style="color:red;"></?php if(isset($paymessage)){ echo $paymessage;}?></span>
 			      			        </div>
-							   
+									-->
+
 	                                <div class="form-group">
 									
                                          <input type="file" accept="image/*" name="food_pic"/>
@@ -276,12 +311,7 @@ if(isset($logout))
 									
                                </form>      	 
 	        </div>
-<!--tab 1 ends-->	   
-			
-			
-			
-			 
-      
+		<!--tab 1 ends-->	   
 	  </div>
 	</div>  
 	

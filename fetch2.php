@@ -1,5 +1,5 @@
 <?php
-$connect = mysqli_connect("localhost", "root", "947539", "dbfood");
+$connect = mysqli_connect("localhost", "root", "", "dbfood");
 $output = '';
 if(isset($_POST["query"]))
 {
@@ -24,10 +24,35 @@ if(mysqli_num_rows($result) > 0)
 	{
 		$food_id= $row['food_id'];
 		$output .= '
-			<tr style="width:100%;background:white; border:1px solid black;">
-				<td style="border-bottom:solid 1px black;padding:10px;"><a href="searchfood.php?food_id='.$food_id.'" style="text-decoration:none;font-weight:bold; color:black;padding:100px;">'.$row["foodname"].'</a></td>
+			<style>
+				#myUL {
+					list-style-type: none;
+					padding: 0;
+					margin: 0;
+					text-align:center;
+				}
 				
-			</tr>
+				#myUL li a {
+					border: 1px solid #ddd;
+					margin-top: -1px; /* Prevent double borders */
+					background-color: #f6f6f6;
+					padding: 12px;
+					text-decoration: none;
+					font-size: 18px;
+					color: black;
+					display: block
+				}
+				
+				#myUL li a:hover:not(.header) {
+					background-color: #eee;
+				}
+			</style>
+
+			<ul id="myUL">
+				<li>
+					<a href="searchfood.php?food_id='.$food_id.'">'.$row["foodname"].'</a>
+				</li>
+			</ul>
 		';
 	}
 	echo $output;
