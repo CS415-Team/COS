@@ -2,17 +2,18 @@
 include("../connection.php");
 include('sendmail.php'); // <--- Send Mail Function 
 
-
 if(isset($_GET['cust_id']))
 {
-	$del_date=NULL; 
-	//$del_date=date("Y-m-d",strtotime($del_date));
+	//$del_date= $_GET['del_date'];
+	//$del_date=date("Y-m-d",strtotime($del_date));  
+	//$del_time= $_GET['del_time'];
+	$del_date= NULL;
 	$del_time= NULL;
 	$loc = $_GET['loc'];
 	$pay = $_GET['pay'];
 	$cust_id=$_GET['cust_id'];
 	$staff_id="";
-	$receiver = $cust_id;
+	$receiver=$cust_id;
 }
 else if(isset($_GET['staff_id']))
 {
@@ -37,7 +38,6 @@ else
 	$staff_id="";
 }
 
-$body = ''; // <--- Send Mail Function
 
 
 
@@ -57,35 +57,41 @@ while($row=mysqli_fetch_array($query))
 	echo "cost is".$cost=$row['cost'];
 	//$em_id=$row['fld_email'];
 	echo 'payment status is'.$paid="In Process";
-	//Send Email
-	echo $del_date;
-	echo $del_time;
 
-	$body = file_get_contents("emailbodysuccessfulpurchase.php"); // <--- Send Mail Function
-	
-
-	//Send email ends
 
 
 	if(mysqli_query($con,"insert into tblorder
 	(fld_cart_id,fldmanager_id,fld_food_id,fld_product_quantity,fld_email_id,staff_id,fld_payment,fldstatus,delivery_location,payment_option,delivery_date,delivery_time) values
 	('$cart_id','$man_id','$food_id', '$qty', '$cust_id', '$staff_id' ,'$cost','$paid', '$loc', '$pay','$del_date','$del_time')"))
 	{
-		if(mysqli_query($con,"delete from tblcart where fld_cart_id='$cart_id'"))
+		$query1= mysqli_query($con, "select fld_order_id from tblorder where fld_cart_id='$cart_id'");
+		while($row1=mysqli_fetch_array($query1))
 		{
-			header("location:customerupdate.php");
+			$OrderID=$row1['fld_order_id'];
+			if(mysqli_query($con,"insert into payroll 
+			(staff_id, payment_amnt, fld_cart_id, fld_order_id) values 
+			('$staff_id','$cost','$cart_id','$OrderID')"))
+			{
+				if(mysqli_query($con,"delete from tblcart where fld_cart_id='$cart_id'"))
+				{
+					header("location:customerupdate.php");
+				}
+			}
+			else
+			{
+				echo "Payroll Info insertion failed";	
+			}
 		}
 	}
 	else
 	{
-		echo "failed";
+		echo "Order Info Insertion failed";
 	}
-
 	//$row['food_id']."<br>";
 
+	$body = file_get_contents("emailbodysuccessfulpurchase.php");
 	$subject= 'Successfully Order Your meal'; // <--- Send Mail Function
 	
-
 	sendmail($body, $subject, $receiver, $receiver); // <--- Send Mail Function
 }
 ?>

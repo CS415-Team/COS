@@ -226,11 +226,11 @@ if(isset($register1))
 				MEAL TYPE
 			</div>
 			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="#">Breakfast Specials</a>
+			<a class="dropdown-item" href="../menu.php#breakfast">Breakfast Specials</a>
 			<div class="dropdown-divider"></div>
 			<a class="dropdown-item" href="../menu.php#lunch">Lunch Specials</a>
 			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="#">Dinner Specials</a>
+			<a class="dropdown-item" href="../menu.php#dinner">Dinner Specials</a>
 			<div class="dropdown-divider"></div>
 			<a class="dropdown-item" href="../menu.php">All</a>
 			</div>
