@@ -139,7 +139,7 @@ if(empty($cust_id) && empty($staff_id))
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #0197A5;">
   
-		<a class="navbar-brand" href="../index.php"><img src="../img/USP Logo.png" style="display: inline-block;"></a>
+		<a class="navbar-brand" href="../index.php"><img src="../../img/USP Logo.png" style="display: inline-block;"></a>
 			<a class="navbar-brand" href="../index.php"><span style="color:white;font-family: 'Permanent Marker', cursive;font-size:22pt;">NaBukDiSh</span>
 			<span style="color:white;font-family:'Permanent Marker', cursive;font-size:18pt;">&copy</span>
 			<br>
@@ -251,7 +251,7 @@ if(empty($cust_id) && empty($staff_id))
 				<!--tab heading-->
 				<ul class="nav nav-tabs nabbar_inverse" id="myTab" style="margin-top:30; margin-bottom:-25px; background:#0197A5;border-radius:10px 10px 10px 10px;" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link" style="color:#063344; font-weight:650;" id="viewitem-tab"  href="subscription.php" role="tab" aria-controls="viewitem" aria-selected="true" >Active Subscription</a>
+                        <a class="nav-link" style="color:#063344; font-weight:650;" id="viewitem-tab"  href="../subscription.php" role="tab" aria-controls="viewitem" aria-selected="true" >Active Subscription</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" style="color:#063344; font-weight:650;" id="manageaccount-tab" data-toggle="tab" href="#manageaccount" role="tab" aria-controls="manageaccount" aria-selected="false">New Subscription</a>
@@ -268,7 +268,7 @@ if(empty($cust_id) && empty($staff_id))
                             <div class="row"><!--Row 4-->
 									<div class="column" style="float:left; text-align:center; width: 50%;">
                                     <label style="color:black; font-weight:bold; text-transform:uppercase; ">Start Date - End Date: </label>
-                                    <input type="text" name="daterange" value="<?php echo date("d/m/Y") ." - ". date("d/m/Y")?>  " />
+                                    <input type="text" name="daterange" value="" />
 
                                     <script>
                                     $(function() {

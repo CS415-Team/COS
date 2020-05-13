@@ -312,7 +312,7 @@ if(empty($cust_id) && empty($staff_id))
                             <div class="row"><!--Row 4-->
 									<div class="column" style="float:left; text-align:center; width: 50%;">
                                     <label style="color:black; font-weight:bold; text-transform:uppercase; ">Start Date - End Date: </label>
-                                    <input type="text" name="daterange" value="<?php echo date("d/m/Y") ." - ". date("d/m/Y")?>  " />
+                                    <input type="text" name="daterange" value="" />
 
                                     <script>
                                     $(function() {
