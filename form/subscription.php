@@ -327,7 +327,7 @@ if(empty($cust_id) && empty($staff_id))
 								
 									<div class="column" style="float:right; text-align:center; width: 50%;">
                                     <label style="color:black; font-weight:bold; text-transform:uppercase; "> Select Delivery Time: </label>	
-										<input type="time" id="delivery_time" name="delivery_time" min="08:00:00" max="19:00:00" required>
+										<input type="time" id="delivery_time" name="delivery_time" min="08:00:00" max="21:00:00" step="900" required>
 									</div><!--R4 C2 Ends-->
 								</div><!--Row 4 Ends-->
 							</div>

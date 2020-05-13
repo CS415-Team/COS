@@ -38,10 +38,21 @@ while($res=mysqli_fetch_assoc($sql))
         ('$cart','22','$meal', '$quantity', '$cust_id', '$id' ,'$cost','$status', '$location', '$paymentoption','$ddate','$dtime')";
         mysqli_query($con, $qry);
 
+        
+        
+        $qry = "SELECT * FROM tblorder WHERE fld_cart_id ='$cart'";
+        $qry = mysqli_query($con, $qry);
+        $data= mysqli_fetch_assoc($qry);
+        
+        $orderid=$data["fld_order_id"];
+
+        $qry = "insert into payroll 
+        (staff_id, payment_amnt, fld_cart_id, fld_order_id) values('$id', '$cost', '$cart', '$orderid')";
+        mysqli_query($con, $qry);
+
+        //sendmail($body, $subject, $receiver, $receiver); // <--- Send Mail Function
         $qry = "Delete from tblcart WHERE fld_cart_id='$cart'";
         mysqli_query($con, $qry);
-        //sendmail($body, $subject, $receiver, $receiver); // <--- Send Mail Function
-
     }
 
     
