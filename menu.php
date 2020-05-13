@@ -850,21 +850,21 @@ if(isset($message))
 									onClick="return KeepMeatCount()"> Beef
 								</div>-->
 
+							<div style="text-align:center">
 							<form method="post" action="">
-								<span>Select Vegetables</span><br/>
+								<span style="font-family: 'Miriam Libre', sans-serif; font-size:20px; font-weight: bold;">Select Vegetables</span><br/>
 								<input type="checkbox" name='a[]' value="brocolli"> Brocolli <br/>
 								<input type="checkbox" name='a[]' value="spinach"> Spinach <br/>
 								<input type="checkbox" name='a[]' value="mushroom"> Mushroom <br/>
 								<input type="checkbox" name='a[]' value="potato"> Potatoes <br/>
-								<span>Select Meat</span><br/>
+								<span style="font-family: 'Miriam Libre', sans-serif; font-size:20px; font-weight:bold;">Select Meat</span><br/>
 								<input type="checkbox" name='a[]' value="chicken"> Chicken <br/>
 								<input type="checkbox" name='a[]' value="pork"> Pork <br/>
 								<input type="checkbox" name='a[]' value="beef"> Beef <br/>
 
 								<input type="submit" value="Submit" name="submit1">
 							</form>
-
-									<br><br>
+							</div>
 						<!--</form>-->
 
 								<form action="menu.php" method="post" id="cart">
@@ -905,42 +905,9 @@ if(isset($message))
 								<span style="font-family: 'Miriam Libre', sans-serif; font-size:28px;color:#CB202D;">Price: $<?php echo $roww['cost']; ?></span>
 								<br>
 					
-								<div style="text-align:center">
-									<span style="font-family: 'Miriam Libre', sans-serif; font-size:23px;">Pick any 3 vegetables of your choice</span>
-									<br>
-									<span style="font-family: 'Miriam Libre', sans-serif; font-size:20px; font-weight: bold;">Vegetables</span>
-									<br>
-									
-									<div style="width:200px;border-radius:6px;margin:0px auto">  
-									<table border="1">  
-									   <tr>  
-										  <td colspan="2">Choose Your Vegetables:</td>  
-									   </tr>  
-									   <tr>  
-										  <td>Tomato</td>  
-										  <td><input type="checkbox" name="veg[]" value="tomato"></td>  
-									   </tr>  
-									   <tr>  
-										  <td>Brocolli</td>  
-										  <td><input type="checkbox" name="veg[]" value="brocolli"></td>  
-									   </tr>  
-									   <tr>  
-										  <td>Spinach</td>  
-										  <td><input type="checkbox" name="veg[]" value="Spinach"></td>  
-									   </tr>  
-									   <tr>  
-										  <td>Cabbage</td>  
-										  <td><input type="checkbox" name="veg[]" value="cabbage"></td>  
-									   </tr>  
-									   <tr>  
-										  <td colspan="2" align="center"><input type="submit" value="submit" name="submit"></td>
-									   </tr>  
-									</table>  
-									</div>
-								</div>
-
-								<form method="post" action="">
-								<span>Select Vegetables</span><br/>
+							<div style="text-align:center">
+							<form method="post" action="">
+								<span style="font-family: 'Miriam Libre', sans-serif; font-size:20px; font-weight: bold;">Vegetables</span><br/>
 								<input type="checkbox" name='b[]' value="brocolli"> Brocolli <br/>
 								<input type="checkbox" name='b[]' value="spinach"> Spinach <br/>
 								<input type="checkbox" name='b[]' value="mushroom"> Mushroom <br/>
@@ -949,8 +916,7 @@ if(isset($message))
 
 								<input type="submit" value="Submit" name="submit2">
 							</form>
-
-									<br><br>
+							</div>
 						<!--</form>-->
 
 								<form action="menu.php" method="post" id="cart">
@@ -1010,8 +976,9 @@ if(isset($message))
 								onClick="return KeepBCount()"> 2 Hashbrowns
 							</div>-->
 
+							<div style="text-align:center">
 							<form method="post" action="">
-								<span>Select Breakfast Items</span><br/>
+								<span style="font-family: 'Miriam Libre', sans-serif; font-size:20px; font-weight: bold;">Select Breakfast Items</span><br/>
 								<input type="checkbox" name='c[]' value="sausage"> 2 Sausages <br/>
 								<input type="checkbox" name='c[]' value="baked"> Baked Beans <br/>
 								<input type="checkbox" name='c[]' value="egg"> 2 Eggs <br/>
@@ -1019,8 +986,7 @@ if(isset($message))
 
 								<input type="submit" value="Submit" name="submit3">
 							</form>
-
-								<br><br>
+							</div>
 						<!--</form>-->
 
 							<form action="menu.php" method="post" id="cart">
@@ -1102,21 +1068,21 @@ if(isset($message))
 									onClick="return KeepCurryCount()"> Duck Curry
 								</div>-->
 
+								<div style="text-align:center">
 								<form method="post" action="">
-								<span>Select Vegetarian Curries</span><br/>
+								<span style="font-family: 'Miriam Libre', sans-serif; font-size:20px; font-weight: bold;">Select Vegetable Curries</span><br/>
 								<input type="checkbox" name='d[]' value="paneer"> Paneer <br/>
 								<input type="checkbox" name='d[]' value="aloo"> Aloo Paneer <br/>
 								<input type="checkbox" name='d[]' value="aloom"> Aloo Mattar <br/>
 								<input type="checkbox" name='d[]' value="bhindi"> Bhindi <br/>
-								<span>Select Meat Curries</span><br/>
+								<span style="font-family: 'Miriam Libre', sans-serif; font-size:20px; font-weight:bold;">Select Meat Curry</span><br/>
 								<input type="checkbox" name='d[]' value="duck"> Duck Curry <br/>
 								<input type="checkbox" name='d[]' value="lamb"> Lamb Curry <br/>
 								<input type="checkbox" name='d[]' value="chicken"> Chicken Curry <br/>
 
 								<input type="submit" value="Submit" name="submit4">
 								</form>
-
-								<br><br>
+								</div>
 						<!--</form>-->
 
 							<form action="menu.php" method="post" id="cart">
