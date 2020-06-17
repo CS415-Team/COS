@@ -10,6 +10,9 @@ if(isset($_SESSION['cust_id']))
 	 $cquery=mysqli_query($con,"select * from tblcustomer where fld_email='$cust_id'");
 	 $cresult=mysqli_fetch_array($cquery);
 	 $staff_id="";
+	 $admin_id="";
+	 $man_id="";
+	 $d_id="";
 }
 else if(isset($_SESSION['staff_id']))
 {
@@ -17,13 +20,50 @@ else if(isset($_SESSION['staff_id']))
 	$squery=mysqli_query($con,"select * from tblstaff where staff_id='$staff_id'");
 	$sresult=mysqli_fetch_array($squery);
 	$cust_id="";
+	$admin_id="";
+	$man_id="";
+	$d_id="";
+}
+else if(isset($_SESSION['id']))
+{
+	$man_id=$_SESSION['id'];
+	$mquery=mysqli_query($con,"select * from tblmanager where fld_email='$man_id'");
+	$mresult=mysqli_fetch_array($mquery);
+	$cust_id="";
+	$staff_id="";
+	$admin_id="";
+	$d_id="";
+}
+else if(isset($_SESSION['admin']))
+{
+	$admin_id=$_SESSION['admin'];
+	$aquery=mysqli_query($con,"select * from tbadmin where fld_username='$admin_id'");
+	$aresult=mysqli_fetch_array($aquery);
+	$man_id="";
+	$cust_id="";
+	$staff_id="";
+	$d_id="";
+}
+else if(isset($_SESSION['d_id']))
+{
+	$d_id=$_SESSION['d_id'];
+	$dquery=mysqli_query($con,"select * from tbl_deliverer where fld_email='$d_id'");
+	$dresult=mysqli_fetch_array($dquery);
+	$man_id="";
+	$cust_id="";
+	$staff_id="";
+	$admin_id="";
 }
 else
 {
 	$cust_id="";
 	$staff_id="";
+	$man_id="";
+	$admin_id="";
+	$d_id="";
 }
  
+/*
 $query=mysqli_query($con,"select  tblmanager.fld_name,tblmanager.fldmanager_id,tblmanager.fld_email,
 tblmanager.fld_mob,tblmanager.fld_address,tblmanager.fld_logo,tbfood.food_id,tbfood.foodname,tbfood.cost,
 tbfood.cuisines,tbfood.paymentmode 
@@ -33,7 +73,7 @@ while($row=mysqli_fetch_array($query))
 	$arr[]=$row['food_id'];
 	shuffle($arr);
 }
-
+*/
 //print_r($arr);
 
 if(isset($addtocart))
@@ -72,7 +112,7 @@ if(isset($addtocart))
 	 {
 		 echo "failed";
 	 }
-}$query=mysqli_query($con,"select tbfood.foodname,tbfood.fldmanager_id,tbfood.cost,tbfood.cuisines,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id from tbfood inner  join tblcart on tbfood.food_id=tblcart.fld_product_id where tblcart.fld_customer_id='$cust_id'");
+}$query=mysqli_query($con,"select tbfood.foodname,tbfood.cost,tbfood.cuisines,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id from tbfood inner  join tblcart on tbfood.food_id=tblcart.fld_product_id where tblcart.fld_customer_id='$cust_id'");
   $re=mysqli_num_rows($query);
 ?>
 <html>
@@ -90,59 +130,67 @@ if(isset($addtocart))
      
 	 <style>
 	 .carousel-item {
-  height: 100vh;
-  min-height: 350px;
-  background: no-repeat center center scroll;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
+	height: 100vh;
+	min-height: 350px;
+	background: no-repeat center center scroll;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	}
 	 </style>
 	 
 	 
-	 <script>
-	 //search product function
-            $(document).ready(function(){
-	
-	             $("#search_text").keypress(function()
-	                      {
-	                       load_data();
-	                       function load_data(query)
-	                           {
-		                        $.ajax({
-			                    url:"fetch.php",
-			                    method:"post",
-			                    data:{query:query},
-			                    success:function(data)
-			                                 {
-				                               $('#result').html(data);
-			                                  }
-		                                });
-	                             }
-	
-	                           $('#search_text').keyup(function(){
-		                       var search = $(this).val();
-		                           if(search != '')
-		                               {
-			                             load_data(search);
-		                                }
-		                            else
-		                             {
-			                         load_data();			
-		                              }
-	                                });
-	                              });
-	                            });
+<script>
+//search product function
+$(document).ready(function(){
+$("#search_text").keypress(function()
+	{
+	load_data();
+	function load_data(query)
+		{
+		$.ajax({
+		url:"fetch.php",
+		method:"post",
+		data:{query:query},
+		success:function(data)
+						{
+						$('#result').html(data);
+						}
+				});
+			}
+
+		$('#search_text').keyup(function(){
+		var search = $(this).val();
+			if(search != '')
+				{
+					load_data(search);
+				}
+			else
+				{
+				load_data();			
+				}
+			});
+			});
+		});
 </script>
 <style>
-ul li {list-style:none;}
-ul li a{color:black; font-weight:bold;}
-ul li a:hover{text-decoration:none;}
+	ul li {list-style:none;}
+	ul li a{color:black; font-weight:bold;}
+	ul li a:hover{text-decoration:none;}
+
+	#footer 
+	{
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		height: 6rem;/* Footer height */
+	}
+
 </style>
-  </head>
+</head>
   
-    
+
 <body>
 <div id="result" style="position:fixed;top:100; right:50;z-index: 3000;width:350px;background:white;"></div>
 <!--navbar start-->
@@ -173,6 +221,33 @@ ul li a:hover{text-decoration:none;}
 	}
 	?>
 
+	<?php
+	if(!empty($man_id))
+	{
+	?>
+	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user"><?php echo $mresult['fld_name']; ?></i></a>
+	<?php
+	}
+	?>
+
+	<?php
+	if(!empty($d_id))
+	{
+	?>
+	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user"><?php echo $dresult['fld_name']; ?></i></a>
+	<?php
+	}
+	?>
+
+	<?php
+	if(!empty($admin_id))
+	{
+	?>
+	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user">Admin</i></a>
+	<?php
+	}
+	?>
+
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -199,31 +274,35 @@ ul li a:hover{text-decoration:none;}
 				<div class="dropdown-divider"></div>
 				<a class="dropdown-item" href="menu.php#dinner">Dinner Specials</a>
 				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="custom.php">Custom Meals</a>
+				<div class="dropdown-divider"></div>
 				<a class="dropdown-item" href="menu.php">All</a>
 				</div>
 		</li>
 		<?php 
+			if(isset($_SESSION['staff_id']))
 
-					if(isset($_SESSION['staff_id']))
-
-					{ ?>
-						<li class="nav-item">
-						<a class="nav-link" href="form/subscription.php">Subscription</a>
-						</li>
-					<?php
-					}
-				
-				?>
+			{ ?>
+				<li class="nav-item">
+				<a class="nav-link" href="form/subscription.php">Subscription</a>
+				</li>
+			<?php
+			}
+		
+		?>
         <li class="nav-item">
           <a class="nav-link" href="aboutus.php">About</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="contact.php">Contact</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="site-help.php">Help</a>
+        </li>
 		<li class="nav-item">
 		  <form method="post">
           <?php
-			if(empty($cust_id) && empty($staff_id))
+			if(empty($cust_id) && empty($staff_id) && empty($man_id) && empty($admin_id)  && empty($d_id))
 			{
 			?>
 			<a href="form/index.php?msg=You must be logged in first"><span style="color:red; font-size:30px;"><i class="fa fa-shopping-cart" aria-hidden="true"><span style="color:red;" id="cart"  class="badge badge-light">0</span></i></span></a>
@@ -235,8 +314,15 @@ ul li a:hover{text-decoration:none;}
 			else
 			{
 			?>
-			<a href="form/cart.php"><span style=" color:green; font-size:30px;"><i class="fa fa-shopping-cart" aria-hidden="true"><span style="color:green;" id="cart"  class="badge badge-light"><?php if(isset($re)) { echo $re; }?></span></i></span></a>
-			<button class="btn btn-danger my-2 my-sm-0" name="logout" type="submit">Log Out</button>&nbsp;&nbsp;&nbsp;
+				<?php 
+				if((!isset($_SESSION['id'])) &&(!isset($_SESSION['admin'])) &&(!isset($_SESSION['d_id'])))
+
+				{ ?>
+					<a href="form/cart.php"><span style=" color:green; font-size:30px;"><i class="fa fa-shopping-cart" aria-hidden="true"><span style="color:green;" id="cart"  class="badge badge-light"><?php if(isset($re)) { echo $re; }?></span></i></span></a>
+				<?php 
+				} 
+				?>
+				<button class="btn btn-danger my-2 my-sm-0" name="logout" type="submit">Log Out</button>&nbsp;&nbsp;&nbsp;
 			<?php
 			}
 			?>
@@ -250,50 +336,58 @@ ul li a:hover{text-decoration:none;}
 </nav>
 <!--navbar ends-->
 
-<br><br><br>
-<div class="container-fluid" style="margin-top:40px; margin-left:0; margin-right:0; padding:0;">
-  <img src="img/contact-us.jpg" width="100%" height="600">
-</div>
-<br>
-<div class="container">
-  <div class="row">
-    <div class="col-sm-8" style="padding:20px; border:1px solid #F0F0F0;">
-	    <form method="post">
-            <div class="form-group">
-                 <input type="text" class="form-control"  placeholder="Name*" name="name" required/>
-            </div>
-			<div class="form-group">
-                 <input type="email" class="form-control"  placeholder="email*" value="<?php if(isset($cust_id)) echo $cust_id; ?>" name="email" required/>
-            </div>
-			<div class="form-group">
-                 <input type="tel" class="form-control" pattern="[2-9]{1}[0-9]{6}"  name="phone" placeholder="Phone Contact(optional) E.g. 6799999"/>
-            </div>
-			<div class="form-group">
-                <textarea class="form-control"    placeholder="Message*" name="msgtxt" rows="3" col="10" required/></textarea/>
-            </div>
-			<div class="form-group">
-                   <button type="submit" name="message" class="btn btn-danger">Send Message</button>
-            </div>
-        </form>
-	</div>
-    <div class="col-sm-4" style="padding:30px;">
-	   <div class="form-group">
-           <i class="fa fa-phone" aria-hidden="true"></i>&nbsp;<b>(+679) 323 1000</b><br><br>
-			<i class="fa fa-home" aria-hidden="true"></i>&nbsp; The University of The South Pacific
+
+<div style="position: relative;  min-height: 100vh;"><!--Container Div-->
+	<div id="content-wrap" style="padding-bottom: 6rem;"><!-- all other page content -->
+
+		<div class="container-fluid" style="margin-top:40px; margin-left:0; margin-right:0; padding:0;">
+			<img src="img/contact-us.jpg" width="100%" height="600">
+			</div>
 			<br>
-			<p style="margin:0; text-indent: 2em"> 
-				Private Bag, Laucala Campus,
-			</p>
-			<p style="margin:0; text-indent: 2em"> 
-				Suva, Fiji.
-			</p>
-	   </div>
-	</div>
-  </div>
-</div>
-<br><br>
-		<?php
-			include("footer.php");
-		?>
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-8" style="padding:20px; border:1px solid #F0F0F0;">
+						<form method="post">
+							<div class="form-group">
+								<input type="text" class="form-control"  placeholder="Name*" name="name" required/>
+							</div>
+							<div class="form-group">
+								<input type="email" class="form-control"  placeholder="email*" value="<?php if(isset($cust_id)) echo $cust_id; ?>" name="email" required/>
+							</div>
+							<div class="form-group">
+								<input type="tel" class="form-control" pattern="[2-9]{1}[0-9]{6}"  name="phone" placeholder="Phone Contact(optional) E.g. 6799999"/>
+							</div>
+							<div class="form-group">
+								<textarea class="form-control"    placeholder="Message*" name="msgtxt" rows="3" col="10" required/></textarea/>
+							</div>
+							<div class="form-group">
+								<button type="submit" name="message" class="btn btn-danger">Send Message</button>
+							</div>
+						</form>
+					</div>
+					<div class="col-sm-4" style="padding:30px;">
+						<div class="form-group">
+						<i class="fa fa-phone" aria-hidden="true"></i>&nbsp;<b>(+679) 323 1000</b><br><br>
+						<i class="fa fa-home" aria-hidden="true"></i>&nbsp; The University of The South Pacific
+						<br>
+						<p style="margin:0; text-indent: 2em"> 
+							Private Bag, Laucala Campus,
+						</p>
+						<p style="margin:0; text-indent: 2em"> 
+							Suva, Fiji.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div><!--End content wrap-->
+		
+		<footer id="footer">
+			<?php
+				include("footer.php");
+			?>
+		</footer>
+	</div><!--Container Div ends-->  
 	</body>
 </html>

@@ -4,29 +4,46 @@ include('connection.php');
  $idd=$_GET['food_id'];
 if(isset($_SESSION['id']))
 {
-$q=mysqli_query($con,"select tblmanager.fld_name,tbfood.fldimage, tblmanager.fldmanager_id, tblmanager.fld_email from tblmanager inner join tbfood on tblmanager.fldmanager_id=tbfood.fldmanager_id where tbfood.food_id='$idd'");
-$res=mysqli_fetch_assoc($q);
-$e=$res['fld_email'];
-$img=$res['fldimage'];
+    $q=mysqli_query($con,"select * from tbfood inner join restaurant on tbfood.res_name=restaurant.res_name where tbfood.food_id='$idd'");
+    $res=mysqli_fetch_assoc($q);
+    //$e=$res['fld_email'];
+    $img=$res['fldimage'];
+    $res_name=$res['res_name'];
+    $food_type=$res['food_type'];
 
-unlink("image/restaurant/$e/foodimages/$img");
+    unlink("image/restaurant/$res_name/$img");
 
-//rmdir("image/$e");
+    //rmdir("image/$e");
 
-if(mysqli_query($con,"delete  from  tbfood where food_id='$idd' "))
-{
-	
-	
-
-    header( "refresh:5;url=food.php" );
- 
-
-	
-}
-else
-{
-	echo "failed to delete";
-}
+    if($food_type == 'custom')
+    {    
+      if(mysqli_query($con,"delete  from  ingredient where food_id='$idd' "))
+      {  
+        if(mysqli_query($con,"delete  from  tbfood where food_id='$idd' "))
+        {
+            header( "refresh:5;url=food.php" );	
+        }
+        else
+        {
+          echo "failed to delete food";
+        }
+      }
+      else
+      {
+        echo "failed to delete ingredients";
+      }
+    }
+    else
+    {  
+      if(mysqli_query($con,"delete  from  tbfood where food_id='$idd' "))
+      {
+          header( "refresh:5;url=food.php" );	
+      }
+      else
+      {
+        echo "failed to delete";
+      }
+    }
 }
 else
 {

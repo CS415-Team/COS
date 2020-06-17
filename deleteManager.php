@@ -1,8 +1,17 @@
 <?php 
 session_start();
 include('connection.php');
- $Managerid=$_GET['Managerid'];
-$re=mysqli_query($con,"select * from tbfood where fldmanager_id='$Managerid'");
+$Managerid=$_GET['Managerid'];
+if(!empty($Managerid))
+{
+  unset($_SESSION['id']);
+  mysqli_query($con,"delete from tblmanager where fldmanager_id='$Managerid'");
+  header( "refresh:3;url=dashboard.php" );
+} 
+
+/*
+$Managerid=$_GET['Managerid'];
+$re=mysqli_query($con,"select * from tbfood ");
 $re_arr=mysqli_fetch_array($re);
 $re_no=mysqli_num_rows($re);
 if($re_no)
@@ -10,14 +19,14 @@ if($re_no)
 	unset($_SESSION['id']);
 	 $man_info=mysqli_query($con,"select * from tblmanager where fldmanager_id='$Managerid'");
 	 $man_row=mysqli_fetch_array($man_info);
-	  $im=$man_row['fld_logo'];
-	  $em=$man_row['fld_email'];
-	  $food_img=$re_arr['fldimage'];
-	 unlink("image/restaurant/$em/foodimages/$food_img");
+	  //$im=$man_row['fld_logo'];
+	  //$em=$man_row['fld_email'];
+	  //$food_img=$re_arr['fldimage'];
+//	 unlink("image/restaurant/$em/foodimages/$food_img");
 	// rmdir("image/restaurant/$em/foodimages");
-	 unlink("image/restaurant/$em/$im");
+	// unlink("image/restaurant/$em/$im");
 	 //rmdir("image/restaurant/$em");
-	 mysqli_query($con,"delete from tbfood where fldmanager_id='$Managerid'");
+	 //mysqli_query($con,"delete from tbfood where fldmanager_id='$Managerid'");
 	 mysqli_query($con,"delete from tblmanager where fldmanager_id='$Managerid'");
 	 header( "refresh:5;url=dashboard.php" );
 	 
@@ -27,15 +36,14 @@ else
 	unset($_SESSION['id']);
 	 $man_info=mysqli_query($con,"select * from tblmanager where fldmanager_id='$Managerid'");
 	 $man_row=mysqli_fetch_array($man_info);
-	  $im=$man_row['fld_logo'];
-	  $em=$man_row['fld_email'];
+	  //$em=$man_row['fld_email'];
 	 mysqli_query($con,"delete from tblmanager where fldmanager_id='$Managerid'");
-	 unlink("image/restaurant/$em/$im");
-	 rmdir("image/restaurant/$em/foodimages");
-	 rmdir("image/restaurant/$em");
+	 //unlink("image/restaurant/$em/$im");
+	// rmdir("image/restaurant/$em/foodimages");
+//	 rmdir("image/restaurant/$em");
 	 header( "refresh:5;url=dashboard.php" );
 }
-
+*/
 ?>
 
 <html>

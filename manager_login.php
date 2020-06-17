@@ -51,7 +51,7 @@ if(isset($login))
 			position: absolute;
 			bottom: 0;
 			width: 100%;
-			height: 6rem;/* Footer height */
+			height: 4rem;/* Footer height */
 		}
 		</style>
 </head>
@@ -75,6 +75,26 @@ if(isset($login))
             <a class="nav-link" href="index.php" style="color:black;font-weight:700">Home</a>
           </li>
 
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" style="color:#063344;font-weight:650" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Menus
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="border:1px solid black;">
+            <div class="dropdown-header" align="center" 
+              style="background-color:#0197A5; color:white; font-family: 'Times New Roman'; font-style:italic; font-weight:bold;">
+              MEAL TYPE
+            </div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="menu.php#breakfast">Breakfast Specials</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="menu.php#lunch">Lunch Specials</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="menu.php#dinner">Dinner Specials</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="menu.php">All</a>
+            </div>
+          </li>
+
           <li class="nav-item">
             <a class="nav-link" href="aboutus.php" style="color:#063344;font-weight:650">About</a>
           </li>
@@ -82,11 +102,14 @@ if(isset($login))
           <li class="nav-item">
             <a class="nav-link" href="contact.php" style="color:#063344;font-weight:650">Contact</a>
           </li>
+            <li class="nav-item">
+            <a class="nav-link" href="site-help.php" style="color:#063344;font-weight:650">Help</a>
+          </li>
         </ul>
       </div>
   </nav>
 
-<div style="position: relative;  min-height: 80vh;"><!--Container Div-->
+<div style="position: relative;  min-height: 100vh;"><!--Container Div-->
 <div id="content-wrap" style="padding-bottom: 1rem;"><!-- all other page content -->
   <div class="container justify-content-center" style=" position:relative; padding:40px; border:1px solid #0197A5; margin-top:150px; width:400px;">
       <ul class="nav nav-tabs nabbar_inverse" id="myTab" style="background:#0197A5;border-radius:10px 10px 10px 10px;" role="tablist">
@@ -111,9 +134,7 @@ if(isset($login))
                     <label for="pwd">Password:</label>
                     <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" required/>
               </div>
-              
-                <button type="submit" name="login" class="btn btn-primary">Submit</button>
-                <a href="manager-new.php"><button type="button" name="new" class="btn btn-warning">Sign Up for New Account</button></a>
+              <button type="submit" name="login" class="btn btn-primary">Submit</button>
         </form>
     </div>
     <!--login Section-- ends-->            

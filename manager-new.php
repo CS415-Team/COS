@@ -38,9 +38,9 @@ if(isset($register))
       
       move_uploaded_file($_FILES['logo']['tmp_name'],"image/restaurant/$email/".$_FILES['logo']['name']);
     }
-    $_SESSION['id']=$email;
+    //$_SESSION['id']=$email;
 
-    header("location:food.php");
+    header("location:dashboard.php");
   }
 }
 ?>
@@ -132,7 +132,9 @@ if(isset($register))
         <li class="nav-item">
           <a class="nav-link" href="contact.php" style="color:#063344;font-weight:650">Contact</a>
         </li>
-
+        <li class="nav-item">
+          <a class="nav-link" href="site-help.php" style="color:#063344;font-weight:650">Help</a>
+        </li>
 				<?php
         if(isset($_SESSION['admin']))
         {

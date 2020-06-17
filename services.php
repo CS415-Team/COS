@@ -163,6 +163,9 @@ ul li a:hover{text-decoration:none;}
         <li class="nav-item">
           <a class="nav-link" href="contact.php">Contact</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="site-help.php">Help</a>
+        </li>
 		<li class="nav-item">
 		  <form method="post">
           <?php

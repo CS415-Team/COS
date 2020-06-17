@@ -10,6 +10,9 @@ if(isset($_SESSION['cust_id']))
 	 $cquery=mysqli_query($con,"select * from tblcustomer where fld_email='$cust_id'");
 	 $cresult=mysqli_fetch_array($cquery);
 	 $staff_id="";
+	 $admin_id="";
+	 $man_id="";
+	 $d_id="";
 }
 else if(isset($_SESSION['staff_id']))
 {
@@ -17,13 +20,50 @@ else if(isset($_SESSION['staff_id']))
 	$squery=mysqli_query($con,"select * from tblstaff where staff_id='$staff_id'");
 	$sresult=mysqli_fetch_array($squery);
 	$cust_id="";
+	$admin_id="";
+	$man_id="";
+	$d_id="";
+}
+else if(isset($_SESSION['id']))
+{
+	$man_id=$_SESSION['id'];
+	$mquery=mysqli_query($con,"select * from tblmanager where fld_email='$man_id'");
+	$mresult=mysqli_fetch_array($mquery);
+	$cust_id="";
+	$staff_id="";
+	$admin_id="";
+	$d_id="";
+}
+else if(isset($_SESSION['admin']))
+{
+	$admin_id=$_SESSION['admin'];
+	$aquery=mysqli_query($con,"select * from tbadmin where fld_username='$admin_id'");
+	$aresult=mysqli_fetch_array($aquery);
+	$man_id="";
+	$cust_id="";
+	$staff_id="";
+	$d_id="";
+}
+else if(isset($_SESSION['d_id']))
+{
+	$d_id=$_SESSION['d_id'];
+	$dquery=mysqli_query($con,"select * from tbl_deliverer where fld_email='$d_id'");
+	$dresult=mysqli_fetch_array($dquery);
+	$man_id="";
+	$cust_id="";
+	$staff_id="";
+	$admin_id="";
 }
 else
 {
 	$cust_id="";
 	$staff_id="";
+	$man_id="";
+	$admin_id="";
+	$d_id="";
 }
 
+/*
 $query=mysqli_query($con,"select  tblmanager.fld_name,tblmanager.fldmanager_id,tblmanager.fld_email,
 tblmanager.fld_mob,tblmanager.fld_address,tblmanager.fld_logo,tbfood.food_id,tbfood.foodname,tbfood.cost,
 tbfood.cuisines,tbfood.paymentmode 
@@ -33,7 +73,7 @@ while($row=mysqli_fetch_array($query))
 	$arr[]=$row['food_id'];
 	shuffle($arr);
 }
-
+*/
 //print_r($arr);
 
 if(isset($addtocart))
@@ -57,7 +97,7 @@ if(isset($addtocart))
 	 session_destroy();
 	 header("location:index.php");
  }
- $query=mysqli_query($con,"select tbfood.foodname,tbfood.fldmanager_id,tbfood.cost,tbfood.cuisines,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id from tbfood inner  join tblcart on tbfood.food_id=tblcart.fld_product_id where tblcart.fld_customer_id='$cust_id'");
+ $query=mysqli_query($con,"select tbfood.foodname,tbfood.cost,tbfood.cuisines,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id from tbfood inner  join tblcart on tbfood.food_id=tblcart.fld_product_id where tblcart.fld_customer_id='$cust_id'");
   $re=mysqli_num_rows($query);
 ?>
 <html>
@@ -93,7 +133,13 @@ if(isset($addtocart))
 		background-position: center;
 	
 	}
-
+	#footer 
+	{
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		height: 6rem;/* Footer height */
+	}
 	 </style>
 	 
 	 
@@ -171,6 +217,33 @@ ul li {list-style:none;}
 	}
 	?>
 
+	<?php
+	if(!empty($man_id))
+	{
+	?>
+	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user"><?php echo $mresult['fld_name']; ?></i></a>
+	<?php
+	}
+	?>
+
+	<?php
+	if(!empty($d_id))
+	{
+	?>
+	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user"><?php echo $dresult['fld_name']; ?></i></a>
+	<?php
+	}
+	?>
+
+	<?php
+	if(!empty($admin_id))
+	{
+	?>
+	<a class="navbar-brand" style="color:black; text-decoration:none;"><i class="far fa-user">Admin</i></a>
+	<?php
+	}
+	?>
+
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -182,37 +255,37 @@ ul li {list-style:none;}
         </li>
 
 		<li class="nav-item dropright">
-                    <a class="nav-link dropdown-toggle" href="#"  style="color:#063344;font-weight:650" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Menus
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="border:1px solid black;">
-                    <div class="dropdown-header" align="center" 
-                        style="background-color:#0197A5; color:white; font-family: 'Times New Roman'; font-style:italic; font-weight:bold;">
-                        MEAL TYPE
-                    </div>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="menu.php#breakfast">Breakfast Specials</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="menu.php#lunch">Lunch Specials</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="menu.php#dinner">Dinner Specials</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="menu.php">All</a>
-                    </div>
-                </li>
+			<a class="nav-link dropdown-toggle" href="#"  style="color:#063344;font-weight:650" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			Menus
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="border:1px solid black;">
+			<div class="dropdown-header" align="center" 
+				style="background-color:#0197A5; color:white; font-family: 'Times New Roman'; font-style:italic; font-weight:bold;">
+				MEAL TYPE
+			</div>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item" href="menu.php#breakfast">Breakfast Specials</a>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item" href="menu.php#lunch">Lunch Specials</a>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item" href="menu.php#dinner">Dinner Specials</a>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item" href="custom.php">Custom Meals</a>	
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item" href="menu.php">All</a>
+			</div>
+		</li>
 
-				<?php 
+		<?php 
+		if(isset($_SESSION['staff_id']))
+		{ ?>
+			<li class="nav-item">
+			<a class="nav-link" href="form/subscription.php" style="color:#063344;font-weight:650">Subscription</a>
+			</li>
+		<?php
+		}
+		?>
 
-				if(isset($_SESSION['staff_id']))
-
-				{ ?>
-					<li class="nav-item">
-					<a class="nav-link" href="form/subscription.php" style="color:#063344;font-weight:650">Subscription</a>
-					</li>
-				<?php
-				}
-
-			?>
         <li class="nav-item">
           <a class="nav-link" href="aboutus.php" style="color:#063344;font-weight:650">About</a>
         </li>
@@ -220,10 +293,15 @@ ul li {list-style:none;}
         <li class="nav-item">
           <a class="nav-link" href="contact.php" style="color:#063344;font-weight:650">Contact</a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="site-help.php" style="color:#063344;font-weight:650">Help</a>
+        </li>
+
 		<li class="nav-item">
 		  <form method="post">
           <?php
-			if(empty($cust_id) && empty($staff_id))
+			if(empty($cust_id) && empty($staff_id) && empty($man_id) && empty($admin_id) && empty($d_id))
 			{
 			?>
 			<a href="form/index.php?msg=You must be logged in first"><span style="color:red; font-size:30px;"><i class="fa fa-shopping-cart" aria-hidden="true"><span style="color:red;" id="cart"  class="badge badge-light">0</span></i></span></a>
@@ -235,8 +313,14 @@ ul li {list-style:none;}
 			else
 			{
 			?>
-			<a href="form/cart.php"><span style=" color:green; font-size:30px;"><i class="fa fa-shopping-cart" aria-hidden="true"><span style="color:green;" id="cart"  class="badge badge-light"><?php if(isset($re)) { echo $re; }?></span></i></span></a>
-			<button class="btn btn-danger my-2 my-sm-0" name="logout" type="submit">Log Out</button>&nbsp;&nbsp;&nbsp;
+				<?php 
+				if((!isset($_SESSION['id'])) &&(!isset($_SESSION['admin'])) &&(!isset($_SESSION['d_id'])))
+				{ ?>
+					<a href="form/cart.php"><span style=" color:green; font-size:30px;"><i class="fa fa-shopping-cart" aria-hidden="true"><span style="color:green;" id="cart"  class="badge badge-light"><?php if(isset($re)) { echo $re; }?></span></i></span></a>
+				<?php 
+				} 
+				?>
+				<button class="btn btn-danger my-2 my-sm-0" name="logout" type="submit">Log Out</button>&nbsp;&nbsp;&nbsp;
 			<?php
 			}
 			?>
@@ -252,36 +336,42 @@ ul li {list-style:none;}
 	
 </nav>
 <!--navbar ends-->
-<br><br>
-<div class="container-fluid" style="margin-top:90px">
-  <img src="img/about.jpg" height="600" width='100%'/>
-</div>
-<br><br>
-<div class="container-fluid" style="background:black; opacity:0.60;">
-<h1 style="color:white; text-align:center; text-transform:uppercase;">About Us</h1>
-<h3 style="color:white; text-align:center; text-transform:uppercase; font-style:italic;">What does NaBukDiSh Mean?</h3>
-<p style="color:white; text-align:center; font-size:25px;">NaBukDish is a combination of the names of the creators of the system. Na for Naval, Buk for Buksh, Di for Divnesh and Sh for Shimneet. Plus it also has the word dish in it. Get it?</p>
 
-<h3 style="color:white; text-align:center; text-transform:uppercase; font-style:italic;">Why create NaBukDish?</h3>
-<p style="color:white; text-align:center; font-size:25px;">NaBukDish Food Ordering System was created as part of 
-a project assignment for the course CS415 at the University of The South Pacific in semester 1 of 2020.
-</p>
+<div style="position: relative;  min-height: 100vh;"><!--Container Div-->
+	<div id="content-wrap" style="padding-bottom: 6rem;"><!-- all other page content -->
+		<div class="container-fluid" style="margin-top:90px">
+			<img src="img/about.jpg" height="600" width='100%'/>
+			</div>
+			<br><br>
+			<div class="container-fluid" style="background:black; opacity:0.60;">
+			<h1 style="color:white; text-align:center; text-transform:uppercase;">About Us</h1>
+			<h3 style="color:white; text-align:center; text-transform:uppercase; font-style:italic;">What does NaBukDiSh Mean?</h3>
+			<p style="color:white; text-align:center; font-size:25px;">NaBukDish is a combination of the names of the creators of the system. Na for Naval, Buk for Buksh, Di for Divnesh and Sh for Shimneet. Plus it also has the word dish in it. Get it?</p>
 
-</div>
+			<h3 style="color:white; text-align:center; text-transform:uppercase; font-style:italic;">Why create NaBukDish?</h3>
+			<p style="color:white; text-align:center; font-size:25px;">NaBukDish Food Ordering System was created as part of 
+			a project assignment for the course CS415 at the University of The South Pacific in semester 1 of 2020.
+			</p>
 
-<br><br>
-<div class="container-fluid" style="background:white; text-transform:uppercase;padding:20px; border-left:10px solid black;"><h3>Our Location</h3></div>
-<div class="container-fluid">
-<div class="mapouter"><div class="gmap_canvas"><iframe width="100%" height="304" id="gmap_canvas" 
-	src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3669.1410809099107!2d178.44288106824857!3d-18.150103553226995!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x55dcb02171075a14!2sUSP%20Faculty%20of%20Science%20%26%20Technology!5e1!3m2!1sen!2sfj!4v1583395682586!5m2!1sen!2sfj" 
-	frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://www.emojilib.com">emojilib.com</a></div>
-	<style>.mapouter{position:relative;text-align:right;height:304px;width:100%;}.gmap_canvas {overflow:hidden;background:none!important;height:304px;width:100%;}</style>
-</div>
-</div>
-<br><br>
- <?php
-	include("footer.php");
-?>
+			</div>
+
+			<br><br>
+			<div class="container-fluid" style="background:white; text-transform:uppercase;padding:20px; border-left:10px solid black;"><h3>Our Location</h3></div>
+			<div class="container-fluid">
+			<div class="mapouter"><div class="gmap_canvas"><iframe width="100%" height="304" id="gmap_canvas" 
+				src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3669.1410809099107!2d178.44288106824857!3d-18.150103553226995!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x55dcb02171075a14!2sUSP%20Faculty%20of%20Science%20%26%20Technology!5e1!3m2!1sen!2sfj!4v1583395682586!5m2!1sen!2sfj" 
+				frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://www.emojilib.com">emojilib.com</a></div>
+				<style>.mapouter{position:relative;text-align:right;height:304px;width:100%;}.gmap_canvas {overflow:hidden;background:none!important;height:304px;width:100%;}</style>
+			</div>
+			</div>
+		</div><!--End content wrap-->
+		<br>
+		<footer id="footer">
+			<?php
+				include("footer.php");
+			?>
+		</footer>
+	</div><!--Container Div ends-->
 
 	</body>
 </html>
