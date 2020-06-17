@@ -489,6 +489,7 @@ if(isset($upd_account))
 		<footer id="footer">
 			<?php
 				include("footer.php");
+			//t
 			?>
 		</footer>
 	</div><!--Container Div ends-->  
