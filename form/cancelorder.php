@@ -2,13 +2,33 @@
 include("../connection.php");
 
 if($id=$_GET['id'])
-	
+{
+	$query=mysqli_query($con,"select fld_food_id, fld_product_quantity from tblorder where fld_order_id='$id'");
+	while($res=mysqli_fetch_assoc($query))
 	{
-		if(mysqli_query($con,"update tblorder set fldstatus='cancelled' where fld_order_id='$id'"))
-		{
-			 header( "refresh:3;url=cart.php" );
-		}
-	}
+		$quantity = $res['fld_product_quantity'];
+		$p_id = $res['fld_food_id'];
+
+		$query1=mysqli_query($con,"select qty_available from tbfood where food_id ='$p_id'");
+		while($res1=mysqli_fetch_assoc($query1))
+    {
+      $q_avail = $res1['qty_available'];
+      $new_q_avail = $q_avail + $quantity;
+
+      if(mysqli_query($con, "update tbfood set qty_available='$new_q_avail' where food_id='$p_id'"))
+      {
+        if(mysqli_query($con,"update tblorder set fldstatus='cancelled' where fld_order_id='$id'"))
+        {
+            header( "refresh:3;url=cart.php" );
+        }
+      }
+      else 
+      {
+        echo "failed to modify quantity available";
+      }
+    }
+  }
+}
 
 
 ?>

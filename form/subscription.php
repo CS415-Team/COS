@@ -188,6 +188,8 @@ if(empty($cust_id) && empty($staff_id))
 				<div class="dropdown-divider"></div>
 				<a class="dropdown-item" href="../menu.php#dinner">Dinner Specials</a>
 				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="../custom.php">Custom Meals</a>
+				<div class="dropdown-divider"></div>
 				<a class="dropdown-item" href="../menu.php">All</a>
 				</div>
 			</li>
@@ -210,7 +212,11 @@ if(empty($cust_id) && empty($staff_id))
 			<li class="nav-item">
 			<a class="nav-link" href="../contact.php" style="color:#063344;font-weight:650">Contact</a>
 			</li>
-			
+
+			<li class="nav-item">
+			<a class="nav-link" href="../site-help.php" style="color:#063344;font-weight:650">Help</a>
+			</li>
+		
 			<li class="nav-item">
 			<form method="post">
 			<?php
@@ -263,7 +269,8 @@ if(empty($cust_id) && empty($staff_id))
 						<!--Delivery location section-->
 						<form id="deliv_pay" >	
 							<div class="w3-container" style=" margin-top:5px;border-radius: 25px; border: 1.5px solid #0197A5; padding: 20px;  width: 100%; ">
-                                <table id="table1" class="table" style="width: 100%; border-collapse: collapse; ">
+                                <div style="overflow-x:auto;">
+								<table id="table1" class="table" style="width: 100%; border-collapse: collapse; ">
                                     <tbody>
                                         <tr style="font-weight:bold;">
                                             <th></th> 
@@ -272,13 +279,14 @@ if(empty($cust_id) && empty($staff_id))
                                             <th>End Date</th>
                                             <th>Delivery Time</th>
                                             <th>Location</th>
+											<th>Quantity</th>
                                             <th>Total</th>
                                             <th></th>
                                             <th></th>
                                         </tr>
 
                                         <?php
-                                        $query=mysqli_query($con,"SELECT mealsubscription.subscription_id, mealsubscription.staff_id, mealsubscription.subcription_date, mealsubscription.start_date, mealsubscription.end_date, mealsubscription.delivery_time, mealsubscription.delivery_location, mealsubscription.meal, mealsubscription.meal_image, mealsubscription.active, tbfood.food_id, tbfood.foodname, tbfood.cost from mealsubscription 
+                                        $query=mysqli_query($con,"SELECT mealsubscription.subscription_id, mealsubscription.quantity, mealsubscription.staff_id, mealsubscription.subcription_date, mealsubscription.start_date, mealsubscription.end_date, mealsubscription.delivery_time, mealsubscription.delivery_location, mealsubscription.meal, mealsubscription.meal_image, mealsubscription.active, tbfood.food_id, tbfood.res_name, tbfood.foodname, tbfood.cost from mealsubscription 
                                         join tbfood on mealsubscription.meal=tbfood.food_id where mealsubscription.active=1 AND mealsubscription.staff_id='$staff_id'");
 
                                             while($res=mysqli_fetch_assoc($query))
@@ -293,13 +301,15 @@ if(empty($cust_id) && empty($staff_id))
                                             <td><?php echo $res["end_date"]?> </td>
                                             <td><?php echo $res["delivery_time"]?> </td>
                                             <td><?php echo $res["delivery_location"]?> </td>
-                                            <td>$<?php echo $res["cost"]?>:00 </td>
-                                            <td><a type="button" name="del" href="subscriptionedit.php/?id=<?php echo $res['subscription_id'];?>"   class="btn btn-warning">Edit</a> </td>
-                                            <td><a type="button" name="del" href="subscriptiondelete.php/?id=<?php echo $res['subscription_id'];?>" class="btn btn-danger">Delete</a> </td>
+											<td><?php echo $res["quantity"]?> </td>
+                                            <td>$<?php echo $res["cost"]* $res["quantity"]?>:00 </td>
+                                            <td><a type="button" name="del" href="subscriptionedit.php?id=<?php echo $res['subscription_id'];?>"   class="btn btn-warning">Edit</a> </td>
+                                            <td><a type="button" name="del" href="subscriptiondelete.php?id=<?php echo $res['subscription_id'];?>" class="btn btn-danger">Delete</a> </td>
                                         </tr>
                                         <?php } ?>
                                     </tbody>
                                 </table>
+								</div>
 							</div><!--Container Ends-->
 						</form><!--Form Ends-->
 					</div><!--Tab 1 Ends-->

@@ -1,9 +1,13 @@
 <?php
-
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 function sendmail($body, $subject, $receiver, $receiver_name)
     {
-        require 'PHPMailer/PHPMailerAutoload.php';
-
+        //require 'PHPMailer/PHPMailerAutoload.php';
+		require 'PHPMailer/src/PHPMailer.php';
+		require 'PHPMailer/src/SMTP.php';
+		require 'PHPMailer/src/Exception.php';
         $mail = new PHPMailer;
 
         //$mail->SMTPDebug = 3;                               // Enable verbose debug output

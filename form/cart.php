@@ -8,11 +8,22 @@ $ar=array();
 $total=0;
 if(isset($_GET['product']))//product id
 {
-	$product_id=$_GET['product'];
+	$product_id=$_GET['product'];	
 }
 else
 {
 	$product_id="";
+}
+
+if(isset($_GET['IngChoice']))//custom ingredients 
+{
+	$IngChoice=$_GET['IngChoice'];	
+	$IngPrice=$_GET['IngPrice'];
+}
+else
+{
+	$IngChoice="";	
+	$IngPrice=0;
 }
 
 if(isset($_SESSION['cust_id']))
@@ -25,6 +36,10 @@ if(isset($_SESSION['cust_id']))
 	$pay="";
 	$del_date="";
 	$del_time="";
+
+	$MealTimeQuery=mysqli_query($con,"select * from  tbfood inner join tblcart on tbfood.food_id=tblcart.fld_product_id");
+	$MealQuery=mysqli_fetch_assoc($MealTimeQuery);
+	$MealTime = $MealQuery['food_time'];
 }
 else if(isset($_SESSION['staff_id']))
 {
@@ -36,6 +51,10 @@ else if(isset($_SESSION['staff_id']))
 	$pay="";
 	$del_date="";
 	$del_time="";
+
+	$MealTimeQuery=mysqli_query($con,"select * from  tbfood inner join tblcart on tbfood.food_id=tblcart.fld_product_id");
+	$MealQuery=mysqli_fetch_assoc($MealTimeQuery);
+	$MealTime = $MealQuery['food_time'];
 }
 
 if(isset($_POST['deliv']) && isset($_POST['payment']))
@@ -65,36 +84,46 @@ if(empty($cust_id) && empty($staff_id))
 	header("location:index.php?msg=You must login first");
 }
 
+
 if(!empty($product_id && $cust_id) || !empty($product_id && $staff_id))
 {
 	$qty = $_SESSION['qty'];
-	//$br = $_SESSION['br'];
-
-	if(mysqli_query($con,"insert into tblcart (fld_product_id,fld_customer_id, fld_staff_id, fld_product_quantity) 
-						values ('$product_id','$cust_id','$staff_id' ,'$qty') "))
+	if($fq=mysqli_query($con,"select * from  tbfood inner join restaurant on tbfood.res_name=restaurant.res_name where tbfood.food_id ='$product_id'"))
 	{
-		$query=mysqli_query($con,"select qty_available from tbfood where food_id ='$product_id'");
-		while($res=mysqli_fetch_assoc($query))
+		if(mysqli_num_rows($fq))
 		{
-			$q_avail = $res['qty_available'];
-			$new_q_avail = $q_avail - $qty;
-
-			if(mysqli_query($con, "update tbfood set qty_available='$new_q_avail' where food_id='$product_id'"))
-			{}
-			else 
+			while($fqr=mysqli_fetch_array($fq))
 			{
-				echo "failed to modify quantity available";
+				$res_name=$fqr['res_name'];
+				if(mysqli_query($con,"insert into tblcart (fld_product_id,fld_customer_id, fld_staff_id, fld_product_quantity, res_name,choices,prices_ing) 
+				values ('$product_id','$cust_id','$staff_id' ,'$qty', '$res_name','$IngChoice','$IngPrice') "))
+				{
+					$query=mysqli_query($con,"select qty_available from tbfood where food_id ='$product_id'");
+					while($res=mysqli_fetch_assoc($query))
+					{
+						$q_avail = $res['qty_available'];
+						$new_q_avail = $q_avail - $qty;
+
+						if(mysqli_query($con, "update tbfood set qty_available='$new_q_avail' where food_id='$product_id'"))
+						{}
+						else 
+						{
+							echo "failed to modify quantity available";
+						}
+					}
+					echo "success";
+					$product_id="";
+					//$prod_qty="";
+					header("location:cart.php");
+				}
+				else
+				{
+					echo "failed";
+				}
 			}
 		}
-		echo "success";
-		$product_id="";
-		//$prod_qty="";
-		header("location:cart.php");
 	}
-	else
-	{
-		echo "failed";
-	}
+	//$newbarr = $_SESSION['newbarr'];
 }
 
 
@@ -126,7 +155,6 @@ if(isset($del))
 	{
 		header("location:deletecart.php");
 	}	
-
 }
   
  if(isset($logout))
@@ -173,16 +201,7 @@ if(isset($del))
 		{
 			header("location:customerupdate.php");			
 		}
-  }
-
-  
-  $query=mysqli_query($con,"select tbfood.foodname,tbfood.fldmanager_id,tbfood.cost,tbfood.cuisines,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id 
-							  from tbfood inner join tblcart on tbfood.food_id=tblcart.fld_product_id 
-							  where tblcart.fld_customer_id='$cust_id'
-							  OR tblcart.fld_staff_id='$staff_id'
-							  ");
-  $re=mysqli_num_rows($query);
-  
+  }  
 ?>
 
 <html>
@@ -218,8 +237,8 @@ if(isset($del))
 		and also iPads specifically.
 		*/
 		@media 
-		only screen and (max-width: 760px),
-		(min-device-width: 768px) and (max-device-width: 1024px)  {
+		only screen and (max-device-width: 768px),	(min-device-width: 768px) and (max-device-width: 1024px)  
+		{
 			#table1 { 
 				display: block; 
 				overflow:scroll;
@@ -292,6 +311,8 @@ if(isset($del))
 				<div class="dropdown-divider"></div>
 				<a class="dropdown-item" href="../menu.php#dinner">Dinner Specials</a>
 				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="../custom.php">Custom Meals</a>
+				<div class="dropdown-divider"></div>
 				<a class="dropdown-item" href="../menu.php">All</a>
 				</div>
 			</li>
@@ -314,6 +335,10 @@ if(isset($del))
 			<li class="nav-item">
 			<a class="nav-link" href="../contact.php" style="color:#063344;font-weight:650">Contact</a>
 			</li>
+
+			<li class="nav-item">
+			<a class="nav-link" href="../site-help.php" style="color:#063344;font-weight:650">Help</a>
+        	</li>
 			
 			<li class="nav-item">
 			<form method="post">
@@ -371,40 +396,21 @@ if(isset($del))
 						<form id="deliv_pay" method="post" action="cart.php">	
 							<div class="w3-container" style=" margin-top:5px;border-radius: 25px; border: 1.5px solid #0197A5; padding: 20px;  width: 100%; ">
 								<div class="row"><!--Row 1-->
-								<?php
-										if(!empty($cust_id) && empty($staff_id))//Customer Options
-										{
-										?>
-											<div class="column" style="text-align:center; float:left; width:50%;">	
-												<label style=" color:black; font-weight:bold; text-transform:uppercase;"> Choose a meal pickup method:</label> 
-												<select id="deliv" name="deliv" onchange="showloc(this.options[this.selectedIndex].id)">
-													<option disabled selected value=" "> Meal Method</option>
-													<option value="Pickup" <?php if (isset($loc) && $loc=="Pickup") echo "selected";?>>Pickup</option>
-													<option value="Have-It-In" <?php if (isset($loc) && $loc=="Have-It-In") echo "selected";?>>Have-It-In</option>
-												</select>
-											</div><!--R1 C1 Ends-->
-										<?php 
-										} 
-										else if(!empty($staff_id) && empty($cust_id))//For staff delivery location
-										{
-										?>
-											<div class="column" style="text-align:center; float:left; width:50%;">	
-												<label style=" color:black; font-weight:bold; text-transform:uppercase;"> Choose a Delivery Location:</label> 
-												<select id="deliv" name="deliv" onchange="showloc(this.options[this.selectedIndex].id)">
-													<option disabled selected value=" "> USP locations</option>
-													<option value="ICT Building A" <?php if (isset($loc) && $loc=="ICT Building A") echo "selected";?>>ICT Building A</option>
-													<option value="ICT Building B" <?php if (isset($loc) && $loc=="ICT Building B") echo "selected";?>>ICT Building B</option>
-													<option value="Lower Campus Hub" <?php if (isset($loc) && $loc=="Lower Campus Hub") echo "selected";?>>Lower Campus Hub</option>
-													<option value="SLS Hub" <?php if (isset($loc) && $loc=="SLS Hub") echo "selected";?>>SLS Hub</option>
-													<option value="FBE Offices" <?php if (isset($loc) && $loc=="FBE Offices") echo "selected";?>>FBE Offices</option>
-													<option value="FSTE Offices" <?php if (isset($loc) && $loc=="FSTE Offices") echo "selected";?>>FSTE Offices</option>
-													<option value="Library" <?php if (isset($loc) && $loc=="Library") echo "selected";?>>Library</option>
-													<option value="SCIMS Offices" <?php if (isset($loc) && $loc=="SCIMS Offices") echo "selected";?>>SCIMS Offices</option>
-													<option id="UserLoc" value="None">Enter location...</option>
-												</select>
-											</div><!--R1 C1 Ends For Staff-->						
-											<?php 
-										}?>
+									<div class="column" style="text-align:center; float:left; width:50%;"><!--R1 C1 For all -->	
+										<label style=" color:black; font-weight:bold; text-transform:uppercase;"> Choose a Delivery Location:</label> 
+										<select id="deliv" name="deliv" onchange="showloc(this.options[this.selectedIndex].id)">
+											<option disabled selected value=" "> USP locations</option>
+											<option value="ICT Building A" <?php if (isset($loc) && $loc=="ICT Building A") echo "selected";?>>ICT Building A</option>
+											<option value="ICT Building B" <?php if (isset($loc) && $loc=="ICT Building B") echo "selected";?>>ICT Building B</option>
+											<option value="Lower Campus Hub" <?php if (isset($loc) && $loc=="Lower Campus Hub") echo "selected";?>>Lower Campus Hub</option>
+											<option value="SLS Hub" <?php if (isset($loc) && $loc=="SLS Hub") echo "selected";?>>SLS Hub</option>
+											<option value="FBE Offices" <?php if (isset($loc) && $loc=="FBE Offices") echo "selected";?>>FBE Offices</option>
+											<option value="FSTE Offices" <?php if (isset($loc) && $loc=="FSTE Offices") echo "selected";?>>FSTE Offices</option>
+											<option value="Library" <?php if (isset($loc) && $loc=="Library") echo "selected";?>>Library</option>
+											<option value="SCIMS Offices" <?php if (isset($loc) && $loc=="SCIMS Offices") echo "selected";?>>SCIMS Offices</option>
+											<option id="UserLoc" value="None">Enter location...</option>
+										</select>
+									</div><!--R1 C1 Ends For All-->						
 			
 									<div id="payment_opt" class="column" style="text-align:center;  float:left;  width: 50%; visibility:hidden;">
 										<?php
@@ -415,7 +421,7 @@ if(isset($del))
 											<label style=" color:black; font-weight:bold; text-transform:uppercase; margin-left:40px;"> Choose a Payment Method:</label>
 											<select id="payment" name="payment" onchange="showcardpayment(this.options[this.selectedIndex].value)">
 											<option disabled selected value=" ">Payment Options</option>
-												<option value="Cash on Pickup">Cash on Pickup</option>
+												<option value="Cash on Delivery">Cash on Delivery</option>
 												<option value="Card Payment" >Card Payment</option>
 											</select>	
 										<?php 
@@ -502,24 +508,35 @@ if(isset($del))
 									</div><!--R3 C2 Ends-->
 								</div><!--Row 3 Ends-->
 
-								<?php 
-								if(!empty($staff_id) && empty($cust_id))//For staff delivery location
-								{
-								?>
-									<div class="row"><!--Row 4-->
-										<div class="column" style="float:left; text-align:center; width: 50%;">
-											<label style="color:black; font-weight:bold; text-transform:uppercase; "> Select Delivery Date: </label>
-											<input type="date" name="delivery_date" min="<?=date('Y-m-d')?>" max="<?=date('Y-m-d',strtotime(date('Y-m-d').'+13 days'))?>"/>
-										</div><!--R4 C1 Ends-->
-									
-										<div class="column" style="float:right; text-align:center; width: 50%;">
-											<label style="color:black; font-weight:bold; text-transform:uppercase; "> Select Delivery Time: </label>	
-											<input type="time" id="delivery_time" name="delivery_time" min="08:00" max="21:00" step="900" required>
-										</div><!--R4 C2 Ends-->
-									</div><!--Row 4 Ends-->
-								<?php 
-								}
-								?>
+								<div class="row"><!--Row 4-->
+									<div class="column" style="float:left; text-align:center; width: 50%;">
+										<label style="color:black; font-weight:bold; text-transform:uppercase; "> Select Delivery Date: </label>
+										<input type="date" name="delivery_date" min="<?=date('Y-m-d')?>" max="<?=date('Y-m-d',strtotime(date('Y-m-d').'+13 days'))?>"/>
+									</div><!--R4 C1 Ends-->
+								
+									<div class="column" style="float:right; text-align:center; width: 50%;">
+										<label style="color:black; font-weight:bold; text-transform:uppercase; "> Select Delivery Time: </label>	
+										<?php 
+											if($MealTime =="breakfast")//Breakfast timing validation
+											{?>		
+												<input type="time" id="delivery_time" name="delivery_time" min="5:00" max="11:59" required>
+										<?php
+											}
+											else if( $MealTime =="lunch")//Lunch timing validation
+											{
+										?> 
+												<input type="time" id="delivery_time" name="delivery_time" min="12:00" max="16:59" required>
+										<?php
+											}
+											else//Dinner timing validation
+											{
+										?>
+												<input type="time" id="delivery_time" name="delivery_time" min="17:00" max="22:00" required>
+										<?php
+											}
+											?>
+									</div><!--R4 C2 Ends-->
+								</div><!--Row 4 Ends-->
 
 								<div class="row"><!--Row 5-->
 									<div class="column" style="float:left; text-align:center; width: 33.33%;"></div><!--R5 C1 Ends-->
@@ -729,39 +746,44 @@ if(isset($del))
 									<td>Price</td>
 									<td>Description</td>
 									<td style="text-align:center;">Quantity Ordered</td>
+									<td>Restaurant</td>
+									<td>Custom Ingredients</td>
+									<td>Ingredients total Price</td>
 									<td>Product Total</td>
+									<td></td>
 								</tr>
 
 								<?php
-								$query=mysqli_query($con,"select tbfood.foodname,tbfood.fldmanager_id,tbfood.cost,tbfood.cuisines,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id, tblcart.fld_staff_id, tblcart.fld_product_quantity 
-															from tbfood inner join tblcart on tbfood.food_id=tblcart.fld_product_id 
+								$query=mysqli_query($con,"select *
+															from tbfood 
+															inner join restaurant on tbfood.res_name=restaurant.res_name 
+															inner join tblcart on tbfood.food_id=tblcart.fld_product_id 
 															where tblcart.fld_customer_id='$cust_id'
 															OR tblcart.fld_staff_id='$staff_id'
 															");
 								$re=mysqli_num_rows($query);
-								if($re)
+								if($re)    
 								{
 									while($res=mysqli_fetch_array($query))
 									{
-										$manager_id=$res['fldmanager_id'];
-										$m_query=mysqli_query($con,"select * from tblmanager where fldmanager_id='$manager_id'");
-										$m_row=mysqli_fetch_array($m_query);
-										$em=$m_row['fld_email'];
-										$nm=$m_row['fld_name'];
 								?>
 										<tr>
-											<td><image src="../image/restaurant/<?php echo $em."/foodimages/".$res['fldimage'];?>" height="80px" width="100px"></td>
+											<td><image src="../image/restaurant/<?php echo $res['res_name'];?>/<?php echo $res['fldimage'];?>" height="80px" width="100px"></td>
 											<td><?php echo $res['foodname'];?></td>
 											<td><?php echo "$".$res['cost'];?></td>
 											<td><?php echo $res['cuisines'];?></td>
 											<td style="text-align:center;"><?php echo $res['fld_product_quantity'];?></td>
-											<td style="text-align:center;"><?php $pro = ($res['cost']*$res['fld_product_quantity']); 
+											<td style="text-align:center;"><?php echo $res['res_name'];?></td>
+											<td style="text-align:center;"><?php echo $res['choices'];?></td>
+											<td style="text-align:center;"><?php echo "$" .$res['prices_ing'];?></td>
+											<td style="text-align:center;"><?php $pro = (($res['cost']+$res['prices_ing'])*$res['fld_product_quantity']); 
 											echo "$" .$pro;?></td>
-											<td></td>
+											<!-- Don't put this in td tag unless displaying in table column and it must match its corresponding tr-> td tag on top where u wrote the column names -->
+											<?php $total=$total+(($res['cost']+$res['prices_ing'])*$res['fld_product_quantity']); $gtotal[]=$total;  ?>
+
 											<form method="post" enctype="multipart/form-data">
 											<td><button type="submit" name="del"  value="<?php echo $res['fld_cart_id']?>" class="btn btn-danger">Delete</button></td>
 											</form>
-											<td><?php $total=$total+($res['cost']*$res['fld_product_quantity']); $gtotal[]=$total;  ?></td>
 										</tr>
 									<?php 
 									} 
@@ -790,8 +812,12 @@ if(isset($del))
 							</tbody>
 						</table>	
 
-						<a href="../menu.php#lunch">
-						<button type="button" style="position:absolute; right:60; color:white; font-weight:bold; text-transform:uppercase;" class="btn btn-success">Continue Shopping</button>
+						<a href="../menu.php">
+						<button type="button" style="position:absolute; right:60; color:white; font-weight:bold; text-transform:uppercase;" class="btn btn-success">Go to regular meals</button>
+						</a>
+						<br><br>
+						<a href="../custom.php">
+						<button type="button" style="position:absolute; right:65; color:white; font-weight:bold; text-transform:uppercase;" class="btn btn-primary">Go to custom page</button>
 						</a>						
 						<br><br>
 
@@ -842,20 +868,19 @@ if(isset($del))
 							if($pay == "Card Payment")
 							{
 							?>
-								<a href="CardOrder.php?cust_id=<?php echo $cust_id; ?>&loc=<?php echo $loc; ?>&pay=<?php echo $pay;?> &owner=<?php echo $owner; ?> &cvv=<?php echo $cvv; ?> &cardNumber=<?php echo $cardNumber; ?> &month=<?php echo $month; ?> &year=<?php echo $year;?>">
+								<a href="CardOrder.php?cust_id=<?php echo $cust_id; ?>&loc=<?php echo $loc; ?>&pay=<?php echo $pay;?> &owner=<?php echo $owner; ?> &cvv=<?php echo $cvv; ?> &cardNumber=<?php echo $cardNumber; ?> &month=<?php echo $month; ?> &year=<?php echo $year;?>&del_date=<?php echo $del_date;?> &del_time=<?php echo $del_time;?>">
 								<button type="button" style="position:absolute; right:60; color:white; font-weight:bold; text-transform:uppercase;" class="btn btn-warning">
 								Proceed to checkout
 								</button></a>
 							<?php 
 							}
-							else if($pay == "Cash on Pickup")
+							else if($pay == "Cash on Delivery")
 							{
 							?>
-								<a href="order.php?cust_id=<?php echo $cust_id; ?>&loc=<?php echo $loc; ?>&pay=<?php echo $pay;?>">
+								<a href="order.php?cust_id=<?php echo $cust_id; ?>&loc=<?php echo $loc; ?>&pay=<?php echo $pay;?>&del_date=<?php echo $del_date;?> &del_time=<?php echo $del_time;?>">
 								<button type="button" style="position:absolute; right:60; color:white; font-weight:bold; text-transform:uppercase;" class="btn btn-warning">
 								Proceed to checkout
 								</button></a>
-
 							<?php 
 							}
 							else
@@ -909,17 +934,23 @@ if(isset($del))
 					
 					<!--tab 3 for customer starts-->
 					<div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-						<table class="table">
+						<table id="table1" class="table" style="width: 100%; border-collapse: collapse;">
 						<!--<th>Order Number</th>-->
 						<th>Customer Email</th>
 						<th>Item Name</th>
+						<th>Restaurant</th>
 						<th>Price($)</th>
 						<th>Quantity</th>
-						<th>Pickup method</th>
+						<th>Custom Ingredients</th>
+						<th>Custom Ingredients Price</th>
+						<th>Delivery Location</th>
 						<th>Payment Option</th>
 						<th>Order Date/Time</th>
+						<th>Delivery Date</th>
+						<th>Delivery Time</th>
 						<th>Cancel order</th>
-							<tbody>
+
+						<tbody>
 							<?php
 							$quer_res=mysqli_query($con,"select * from tblorder where fld_email_id='$cust_id' && fldstatus='In Process'");
 							while($roww=mysqli_fetch_array($quer_res))
@@ -943,12 +974,16 @@ if(isset($del))
 									<?php
 								}
 								?>
-								
+								<td><?php echo $roww['res_name'];?></td>
 								<td><?php echo $qrr['cost']; ?></td>
 								<td><?php echo $roww['fld_product_quantity'];?></td>
+								<td><?php echo $roww['custom_ing'];?></td>
+								<td><?php echo $roww['cus_ing_price'];?></td>
 								<td><?php echo $roww['delivery_location']; ?></td>
 								<td><?php echo $roww['payment_option']; ?></td>
 								<td><?php echo $roww['order_time']; ?></td>
+								<td><?php echo $roww['delivery_date']; ?></td>
+								<td><?php echo $roww['delivery_time']; ?></td>
 								<td><a href="#" onclick="del(<?php echo $roww['fld_order_id'];?>);"><button type="button" class="btn btn-danger">Cancel Order</button></a></td>
 								</tr>
 								<?php }	?>  
@@ -958,7 +993,7 @@ if(isset($del))
 					<?php 
 						}
 					?>
-																<!------Staff------->
+					<!------Staff------->
 					<?php
 						if(!empty($staff_id) && empty($cust_id))
 						{
@@ -1000,12 +1035,15 @@ if(isset($del))
 					
 					<!--tab 3 for staff starts-->
 					<div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-						<table class="table">
+						<table id="table1" class="table" style="width: 100%; border-collapse: collapse;">
 							<!--<th>Order Number</th>-->
 							<th>Staff ID</th>
 							<th>Item Name</th>
+							<th>Restaurant</th>
 							<th>Price($)</th>
 							<th>Quantity</th>
+							<th>Custom Ingredients</th>
+							<th>Custom Ingredients Price</th>
 							<th>Delivery Location</th>
 							<th>Payment Option</th>
 							<th>Order Date/Time</th>
@@ -1037,8 +1075,11 @@ if(isset($del))
 								}
 								?>
 								
+								<td><?php echo $roww['res_name'];?></td>
 								<td><?php echo $qrr['cost']; ?></td>
 								<td><?php echo $roww['fld_product_quantity'];?></td>
+								<td><?php echo $roww['custom_ing'];?></td>
+								<td><?php echo $roww['cus_ing_price'];?></td>
 								<td><?php echo $roww['delivery_location']; ?></td>
 								<td><?php echo $roww['payment_option']; ?></td>
 								<td><?php echo $roww['order_time']; ?></td>

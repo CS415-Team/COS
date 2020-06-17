@@ -29,14 +29,7 @@ else
 	$staff_id="";
 }
 
-$query=mysqli_query($con,"select  tblmanager.fld_name,tblmanager.fldmanager_id,tblmanager.fld_email,
-tblmanager.fld_mob,tblmanager.fld_address,tblmanager.fld_logo,tbfood.food_id,tbfood.foodname,tbfood.cost,
-tbfood.qty_available,tbfood.paymentmode from tblmanager inner join tbfood on tblmanager.fldmanager_id=tbfood.fldmanager_id;");
-while($row=mysqli_fetch_array($query))
-{
-	$arr[]=$row['food_id'];
-	shuffle($arr);
-}
+
 
 
 
@@ -52,12 +45,7 @@ while($row=mysqli_fetch_array($query))
 	 header("location:index.php");
  }
 
-$query=mysqli_query($con,"select tbfood.foodname,tbfood.fldmanager_id,tbfood.cost,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id 
-						 from tbfood inner join tblcart on tbfood.food_id=tblcart.fld_product_id 
-						 where tblcart.fld_customer_id='$cust_id'
-						 OR tblcart.fld_staff_id='$staff_id'
-						 ");
-$re=mysqli_num_rows($query);
+
 
 
 ?>
@@ -386,7 +374,8 @@ $re=mysqli_num_rows($query);
 						<!--Delivery location section-->
 							
 							<div class="w3-container" style=" margin-top:5px;border-radius: 25px; border: 1.5px solid #0197A5; padding: 20px;  width: 100%; ">
-                                <table id="table1" class="table" style="width: 100%; border-collapse: collapse; ">
+								<div style="overflow-x:auto;">
+								<table id="table1" class="table" style="width: 100%; border-collapse: collapse; ">
                                     <tbody>
                                     <tr style="font-weight:bold;">
                                             <th></th> 
@@ -395,11 +384,12 @@ $re=mysqli_num_rows($query);
                                             <th>End Date</th>
                                             <th>Delivery Time</th>
                                             <th>Location</th>
+											<th>Quantity</th>
                                             <th>Total</th>
                                             
                                         </tr>
                                     <?php
-                                        $query=mysqli_query($con,"SELECT mealsubscription.subscription_id, mealsubscription.staff_id, mealsubscription.subcription_date, mealsubscription.start_date, mealsubscription.end_date, mealsubscription.delivery_time, mealsubscription.delivery_location, mealsubscription.meal, mealsubscription.meal_image, tbfood.food_id, tbfood.foodname, tbfood.cost from mealsubscription 
+                                        $query=mysqli_query($con,"SELECT mealsubscription.subscription_id, mealsubscription.staff_id,mealsubscription.quantity, mealsubscription.subcription_date, mealsubscription.start_date, mealsubscription.end_date, mealsubscription.delivery_time, mealsubscription.delivery_location, mealsubscription.meal, mealsubscription.meal_image, tbfood.food_id, tbfood.foodname, tbfood.cost from mealsubscription 
                                         join tbfood on mealsubscription.meal=tbfood.food_id where mealsubscription.subscription_id='$id'");
 
                                             while($res=mysqli_fetch_assoc($query))
@@ -414,17 +404,84 @@ $re=mysqli_num_rows($query);
                                             <td><?php echo $res["end_date"]?> </td>
                                             <td><?php echo $res["delivery_time"]?> </td>
                                             <td><?php echo $res["delivery_location"]?> </td>
-                                            <td>$<?php echo $res["cost"]?>:00 </td>
+											<td><?php echo $res["quantity"]?> </td>
+                                            <td>$<?php echo $res["cost"] * $res["quantity"]?>:00 </td>
                                             
                                         </tr>
                                         <?php } ?>
                                     </tbody>
                                 </table>
+								</div>
                                 <form id="deliv_pay" method="post" action="subscriptionmealsuccess.php?id=<?php echo $id;?>">
+								<!---->
                                 <div class="form-group">
-                                <input type="checkbox" id="name"  class="" name="name" required="required"/>
-                                <label for="name">Please acknowledge that all payments for meal subscription will be done through Payroll Deduction</label>
                                 
+                                <label style=" color:black; font-weight:bold; text-transform:uppercase; margin-left:40px;"> Choose a Payment Method:</label>
+											<select id="payment" name="payment" onchange="showcardpayment(this.options[this.selectedIndex].value)">
+												<option disabled selected value=" ">Payment Options</option>
+												<option value="Payroll Deduction">Payroll Deduction</option>
+												
+												<option value="Card Payment">Card Payment</option>
+											</select>
+								</div>
+
+								<div class="row"><!--Row 3-->
+									<div class="column" style="float:left; width: 33.33%;"></div><!--R3 C1 Ends-->
+									<div class="column" style="text-align:center; width: 33.33%;"><!--R3 C2 Starts-->
+										<div>
+											<label id="error_message" class="text-danger"></label>  
+											<label id="success_message" class="text-success"></label>
+										</div>
+										<div id="cardpayment" style="display:none;">
+											<div class="payment">
+													<div class="form-group owner">
+														<label for="owner" style="font-weight:bold;">Owner</label>
+														<input type="text" class="form-control" id="owner" name="owner">
+													</div>
+													<div class="form-group CVV">
+														<label for="cvv" style="font-weight:bold;">CVV</label>
+														<input type="text" class="form-control" id="cvv" name="cvv">
+													</div>
+													<div class="form-group" id="card-number-field">
+														<label for="cardNumber" style="font-weight:bold;">Card Number</label>
+														<input type="text" class="form-control" id="cardNumber" name="cardNumber">
+													</div>
+													<div class="form-group" id="expiration-date">
+														<label style="font-weight:bold;">Expiration Date: </label>
+														<select id="month" name="month">
+															<option value="01">January</option>
+															<option value="02">February </option>
+															<option value="03">March</option>
+															<option value="04">April</option>
+															<option value="05">May</option>
+															<option value="06">June</option>
+															<option value="07">July</option>
+															<option value="08">August</option>
+															<option value="09">September</option>
+															<option value="10">October</option>
+															<option value="11">November</option>
+															<option value="12">December</option>
+														</select>
+														<select id="year" name="year">
+															<option value="2020"> 2020</option>
+															<option value="2021"> 2021</option>
+															<option value="2022"> 2022</option>
+															<option value="2023"> 2023</option>
+															<option value="2024"> 2024</option>
+															<option value="2025"> 2025</option>
+															<option value="2026"> 2026</option>
+														</select>
+													</div>
+													<div class="form-group" id="credit_cards">
+														<img src="../img/visa.jpg" id="visa">
+														<img src="../img/mastercard.jpg" id="mastercard">
+														<img src="../img/amex.jpg" id="amex">
+													</div>
+												
+											</div>
+										</div>
+									</div><!--R3 C2 Ends-->
+								</div><!--Row 3 Ends-->
                                 <div style="text-align:right;">
 								<button type="submit" name="update" style="background:#ED2553; border:1px solid #ED2553;" class="btn btn-primary">Continue</button>
 							</div> 
@@ -433,7 +490,192 @@ $re=mysqli_num_rows($query);
 							</div><!--Container Ends-->
 						
 					</div><!--Tab 1 Ends-->
+					<script src="js/jquery.payform.min.js" charset="utf-8"></script>
+						<script>
+						//Check current card value
+						function checkcard()
+						{
+							var sel = document.getElementById("payment");
+							var value= sel.options[sel.selectedIndex].value;
+							if(value == 'Card Payment')
+							{
+								$("#cardpayment").css('display', 'block');
+							}
+						};
 
+						//Card payment field Show
+						function showcardpayment(value)
+						{
+							if(value=='Card Payment')
+							{
+								$("#cardpayment").css('display', 'block');
+						
+							}
+							else
+							{
+								$("#cardpayment").css('display', 'none');
+							}
+						};
+
+						//User defined location field Show
+						function showloc(id)
+						{
+							if(id=='UserLoc')
+							{
+								var x = document.getElementById('Location');
+								x.style.display = "block";
+								$("#cardpayment").css('display', 'none');
+
+								$("#txtBox").keyup(function() {
+									var inputVal = document.getElementById("txtBox").value;
+									if(inputVal.length == 0)
+									{
+										$("#payment_opt").css('visibility', 'hidden');
+										$("#cardpayment").css('display', 'none');	
+									}
+									else
+									{
+										$("#deliv option:selected").val(inputVal);
+										$("#payment_opt").css('visibility','visible');
+										checkcard();
+									} 
+								});
+							}
+							else
+							{
+								$("#payment_opt").css('visibility', 'hidden');
+								var x = document.getElementById('Location');
+								x.style.display = "none";
+							}
+						};
+
+						//Payment hide/unhide 
+						$(document).ready(function(){
+							var delivery = $('deliv').val();
+							$('#deliv').on('change', function() {
+								if (this.value && this.value != "None")
+								{
+									$("#payment_opt").css('visibility','visible');
+									checkcard();
+								}
+								else
+								{
+									$("#payment_opt").css('visibility', 'hidden');
+								}
+							});
+						});
+
+						$(function() {
+							var owner = $('#owner');
+							var cardNumber = $('#cardNumber');
+							var cardNumberField = $('#card-number-field');
+							var CVV = $("#cvv");
+							var mastercard = $("#mastercard");
+							var visa = $("#visa");
+							var amex = $("#amex");
+
+							// Use the payform library to format and validate
+							// the payment fields.
+
+							cardNumber.payform('formatCardNumber');
+							CVV.payform('formatCardCVC');
+
+							cardNumber.keyup(function() {
+								visa.css('opacity', 1);
+								mastercard.css('opacity', 1);
+								amex.css('opacity', 1);
+
+								if ($.payform.validateCardNumber(cardNumber.val()) == false) 
+								{
+									cardNumberField.addClass('has-error');
+								} 
+								else 
+								{
+									cardNumberField.removeClass('has-error');
+									cardNumberField.addClass('has-success');
+								}
+
+								if ($.payform.parseCardType(cardNumber.val()) == 'visa') 
+								{
+									mastercard.css('opacity', .3);
+									amex.css('opacity', .3);
+
+								} 
+								else if ($.payform.parseCardType(cardNumber.val()) == 'amex') 
+								{
+									mastercard.css('opacity', .3);
+									visa.css('opacity', .3);
+								} 
+								else if ($.payform.parseCardType(cardNumber.val()) == 'mastercard') 
+								{
+									visa.css('opacity', .3);
+									amex.css('opacity', .3);
+								}
+							});
+
+							//Payment submission success/failure message  
+							$("#deliv_pay").submit(function( event ) {
+								  
+								var payment = $('#payment').val();
+								var $this = $(this);
+
+								event.preventDefault();
+							
+								if(!$('#payment').val())
+								{  
+									$('#error_message').fadeIn().html("Please select appropriate information");
+									setTimeout(function(){
+											$('#error_message').fadeOut();
+									}, 1500);
+								}  
+								else if($('#payment').val() == "Card Payment" )
+								{
+									var isCardValid = $.payform.validateCardNumber(cardNumber.val());
+									var isCvvValid = $.payform.validateCardCVC(CVV.val());
+
+									if(owner.val().length < 5){
+										alert("Wrong owner name");
+									} 
+									else if (!isCardValid) {
+										alert("Wrong card number");
+									} 
+									else if (!isCvvValid) {
+										alert("Wrong CVV");
+									} 
+									else 
+									{
+										// Everything is correct
+										$("#error_message").html("").hide();
+										$('#success_message').fadeIn().html("Delivery and Payment Info Confirmed");  
+										setTimeout(function(){
+												$('#success_message').fadeOut();
+										}, 1500);
+
+										$this.unbind("submit");
+										setTimeout( $.proxy( $.fn.submit, $this ), 2000);
+									}
+								}
+								else
+								{
+									$("#error_message").html("").hide();
+									$('#success_message').fadeIn().html("Delivery and Payment Info Confirmed");  
+									setTimeout(function(){
+											$('#success_message').fadeOut();
+									}, 1500);
+
+									$this.unbind("submit");
+									setTimeout( $.proxy( $.fn.submit, $this ), 2000);
+								}
+							});
+						});					
+
+						//Error mssg when meal pickup or delivery and payment info not filled 
+						function ErrorMssg() 
+						{
+							alert("Please fill out all the required information before proceeding to checkout");
+						}
+
+						</script>
 
 
         </div> <!--Main div ends--> 	 

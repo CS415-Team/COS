@@ -66,7 +66,7 @@ if(empty($cust_id) && empty($staff_id))
     
     if(mysqli_query($con, $sql))
     {
-        header("location:../subscriptionmeals.php?meal=".$mealtype."&dt=".$datentime);
+        header("location:subscriptionmeals.php?meal=".$mealtype."&dt=".$datentime);
     }
     
     else
@@ -139,7 +139,7 @@ if(empty($cust_id) && empty($staff_id))
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #0197A5;">
   
-		<a class="navbar-brand" href="../index.php"><img src="../../img/USP Logo.png" style="display: inline-block;"></a>
+		<a class="navbar-brand" href="../index.php"><img src="../img/USP Logo.png" style="display: inline-block;"></a>
 			<a class="navbar-brand" href="../index.php"><span style="color:white;font-family: 'Permanent Marker', cursive;font-size:22pt;">NaBukDiSh</span>
 			<span style="color:white;font-family:'Permanent Marker', cursive;font-size:18pt;">&copy</span>
 			<br>
@@ -210,6 +210,10 @@ if(empty($cust_id) && empty($staff_id))
 
 			<li class="nav-item">
 			<a class="nav-link" href="../contact.php" style="color:#063344;font-weight:650">Contact</a>
+			</li>
+
+			<li class="nav-item">
+			<a class="nav-link" href="../site-help.php" style="color:#063344;font-weight:650">Help</a>
 			</li>
 			
 			<li class="nav-item">

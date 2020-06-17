@@ -26,14 +26,7 @@ else
 	$staff_id="";
 }
 
-$query=mysqli_query($con,"select  tblmanager.fld_name,tblmanager.fldmanager_id,tblmanager.fld_email,
-tblmanager.fld_mob,tblmanager.fld_address,tblmanager.fld_logo,tbfood.food_id,tbfood.foodname,tbfood.cost,
-tbfood.qty_available,tbfood.paymentmode from tblmanager inner join tbfood on tblmanager.fldmanager_id=tbfood.fldmanager_id;");
-while($row=mysqli_fetch_array($query))
-{
-	$arr[]=$row['food_id'];
-	shuffle($arr);
-}
+
 
 $query=mysqli_query($con,"Select * from mealsubscription where staff_id='$staff_id' AND subcription_date='$dt'");
 if($row=mysqli_fetch_array($query))
@@ -41,22 +34,19 @@ if($row=mysqli_fetch_array($query))
     $subscription_id = $row['subscription_id'];
     
 }
-//print_r($arr);
+
 
 if(isset($addtocart))
 { 
     
     $addtocart =(int)$addtocart;
-    $query=mysqli_query($con,"select tblmanager.fld_email,tblmanager.fld_name,tblmanager.fld_mob, tblmanager.fld_phone,tblmanager.fld_address,
-    tblmanager.fld_logo,tbfood.food_id,tbfood.foodname,tbfood.cost, tbfood.cuisines,tbfood.paymentmode,tbfood.fldimage,tbfood.food_time,
-    tbfood.qty_available from tblmanager inner join tbfood on tblmanager.fldmanager_id=tbfood.fldmanager_id 
-    where tbfood.fldmanager_id=tblmanager.fldmanager_id && tbfood.food_id=$addtocart");
+    $query=mysqli_query($con,"select * FROM tbfood WHERE food_id=$addtocart");
 
         while($res=mysqli_fetch_assoc($query))
             {
-                $mimage = "../image/restaurant/". $res['fld_email']."/foodimages/".$res['fldimage'];
+                $mimage = "../image/restaurant/".$res['res_name']."/".$res['fldimage'];
             }
-    $_POST['foodqty'] = 1;
+   // $_POST['foodqty'] = 1;
    if(!empty($_SESSION['cust_id']) || !empty($_SESSION['staff_id']))
    {
        $query=mysqli_query($con,"select qty_available from tbfood where food_id =$addtocart");
@@ -74,8 +64,8 @@ if(isset($addtocart))
            else
            {
  
-               $_SESSION['qty'] = $_POST['foodqty'];
-               $sql = "Update mealsubscription SET meal='$addtocart', meal_image='$mimage' WHERE subscription_id='$subscription_id' ";
+               $qty = $_POST['foodqty'];
+               $sql = "Update mealsubscription SET meal='$addtocart',quantity='$qty', meal_image='$mimage' WHERE subscription_id='$subscription_id' ";
                 
                     if(mysqli_query($con, $sql))
                     {
@@ -107,12 +97,7 @@ if(isset($addtocart))
 	 header("location:index.php");
  }
 
-$query=mysqli_query($con,"select tbfood.foodname,tbfood.fldmanager_id,tbfood.cost,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id 
-						 from tbfood inner join tblcart on tbfood.food_id=tblcart.fld_product_id 
-						 where tblcart.fld_customer_id='$cust_id'
-						 OR tblcart.fld_staff_id='$staff_id'
-						 ");
-$re=mysqli_num_rows($query);
+
 
 
 ?>
@@ -388,6 +373,11 @@ $re=mysqli_num_rows($query);
         </li>
         
         <li class="nav-item">
+        <a class="nav-link" href="../site-help.php" style="color:#063344;font-weight:650">Help</a>
+        </li>
+		
+        
+        <li class="nav-item">
         <form method="post">
         <?php
             if(empty($cust_id) && empty($staff_id))
@@ -439,10 +429,7 @@ $re=mysqli_num_rows($query);
         <h1 class="breakfast-meal" id="breakfast" align="center" ><?php echo $meal;?> & Regular Meals</h1>
             <div class="row">
             <?php
-                $query=mysqli_query($con,"select tblmanager.fld_email,tblmanager.fld_name,tblmanager.fld_mob,
-                tblmanager.fld_phone,tblmanager.fld_address,tblmanager.fld_logo,tbfood.food_id,tbfood.foodname,tbfood.cost,
-                tbfood.cuisines,tbfood.paymentmode,tbfood.fldimage,tbfood.food_time,tbfood.qty_available from tblmanager inner join
-                tbfood on tblmanager.fldmanager_id=tbfood.fldmanager_id where (tbfood.fldmanager_id=tblmanager.fldmanager_id) && (tbfood.food_time='$meal' OR tbfood.food_time='regular')");
+                $query=mysqli_query($con," select * From tbfood where tbfood.food_time='$meal' OR tbfood.food_time='regular'");
 
                     while($res=mysqli_fetch_assoc($query))
                         {
@@ -454,16 +441,19 @@ $re=mysqli_num_rows($query);
                                     <b><?php echo $res['foodname'] ?></b>
                                 </div>
                                 <div class="panel-body">
-                                    <img src="../image/restaurant/<?php echo $res['fld_email']."/foodimages/".$res['fldimage'];?>"  height="300px" width="100%">
+                                    <img src="../image/restaurant/<?php echo $res['res_name'];?>/<?php echo $res['fldimage'];?>"  height="300px" width="100%">
                                 </div>
-                                <span style="font-family: 'Miriam Libre', sans-serif; font-size:28px;color:#CB202D;"><?php echo $res['fld_name']; ?></span>
+                                <span style="font-family: 'Miriam Libre', sans-serif; font-size:28px;color:#CB202D;"><?php echo $res['foodname']; ?></span>
                                 <br>
                                 <span style="color:black; font-size:20px; white-space:nowrap;">Price: $<?php echo $res['cost']; ?></span>
                                 <br>
                                 
                                 <form action="" method="post" id="cart">
                                     
-
+                                    <span style="color:black; font-size:20px; white-space:nowrap;">Quantity: 
+										<input type="number" id="foodqty" name="foodqty" min="1" max="20" step="1" value="0" style="font-size:20px;"></span>
+									
+										<br><br>
                                     <div align="left">
                                     <span style="color:black; font-size:20px; white-space:nowrap;">Add to Subscription: </span>
                                     <button type="submit" name="addtocart" value="<?php echo $res['food_id'];?>")" >

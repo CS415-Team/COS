@@ -194,6 +194,13 @@ if(isset($register1))
 		ul li{list-style:none;}
 		ul li a {color:black;font-weight:bold;text-decoration:none; }
 		ul li a:hover {color:black;text-decoration:none;}
+
+		#footer {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			height: 7rem;/* Footer height */
+		}
 		</style>
 </head>
 <body>
@@ -243,156 +250,178 @@ if(isset($register1))
         <li class="nav-item">
           <a class="nav-link" href="../contact.php">Contact</a>
         </li>
-		
+		<li class="nav-item">
+          <a class="nav-link" href="../site-help.php">Help</a>
+        </li>
       </ul>
     </div>
 </nav>
 <br><br><br>
+<div style="position: relative;  min-height: 100vh;" ><!--Container Div starts-->
+	<div id="content-wrap" style="padding-bottom: 9rem;"><!--Page Content-->
+			<div id="myRadioGroup"><!--User Views Start-->
+				<div class="middle" style="margin-top:60px; margin-bottom:10px; text-align:center;">
+					Customer Login<input type="radio" name="user" checked="checked" value="1" style="margin-right:15px;"/>  
+					Staff Login<input type="radio" name="user" value="2"/>
+				</div>
 
-<!--User Views Start-->
-<div id="myRadioGroup">
-	<div class="middle" style="margin-top:60px; margin-bottom:10px; text-align:center;">
-		Customer Login<input type="radio" name="user" checked="checked" value="1" style="margin-right:15px;"/>  
-		Staff Login<input type="radio" name="user" value="2"/>
-	</div>
+				<div id="User1" class="desc">
+					<div class="middle" style=" margin:0px auto;width:500px; margin-top:0px;">
+						<ul class="nav nav-tabs navbar_inverse" id="myTab" style="background:#0197A5;border-radius:10px 10px 10px 10px;" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" style="color:#063344;" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="true">Log In</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="signup-tab" style="color:#063344;" data-toggle="tab" href="#signup" role="tab" aria-controls="signup" aria-selected="false">Create New Account</a>
+							</li>
+						</ul>
+						<br>
+						<div class="tab-content" id="myTabContent">
+						<!--login Section-- starts-->
+								<div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="home-tab" style="margin-top:5px;border-radius: 25px; border: 1.5px solid #0197A5; padding: 20px;  width: 100%; ">
+									<h2 style="color:#0197A5;font-family: 'Permanent Marker', cursive; text-decoration: underline; text-align:center;">Customer Login</h2>
+									<div class="footer" style="text-align:center; color:red;"><?php if(isset($loginmsg)){ echo $loginmsg;}?></div>
+								<form method="post" enctype="multipart/form-data">
+									<br><br>
+									<div class="w3-container" style="margin-top:5px;border-radius: 25px; border: 1.5px solid #0197A5; padding: 20px;  width: 100%; ">
+										<div class="form-group">
+										<label for="email">Email address:</label>
+										<input type="email" class="form-control" name="email" id="email" required/>
+										</div>
 
-    <div id="User1" class="desc">
-		<div class="middle" style=" margin:0px auto;width:500px; margin-top:0px;">
-			   <ul class="nav nav-tabs navbar_inverse" id="myTab" style="background:#0197A5;border-radius:10px 10px 10px 10px;" role="tablist">
-				  <li class="nav-item">
-					 <a class="nav-link active" style="color:#063344;" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="true">Log In</a>
-				  </li>
-				  <li class="nav-item">
-					  <a class="nav-link" id="signup-tab" style="color:#063344;" data-toggle="tab" href="#signup" role="tab" aria-controls="signup" aria-selected="false">Create New Account</a>
-				  </li>
-			   </ul>
-			   <br><br>
-			   <div class="tab-content" id="myTabContent">
-
-			   <!--login Section-- starts-->
-					<div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="home-tab">
-						<div class="footer" style="color:red;"><?php if(isset($loginmsg)){ echo $loginmsg;}?></div>
-					  <form method="post" enctype="multipart/form-data">
-							<div class="form-group">
-							  <label for="email">Email address:</label>
-							  <input type="email" class="form-control" name="email" id="email" required/>
-							</div>
-						   <div class="form-group">
-							  <label for="pwd">Password:</label>
-							 <input type="password" name="password" class="form-control" id="pwd" required/>
-						   </div>
-		 
-						  <button type="submit" name="login" style="background:#0197A5; border:1px solid #0197A5;" class="btn btn-primary">Login </button>
-						  <div class="footer" style="color:red;"><?php if(isset($ermsg)) { echo $ermsg; }?><?php if(isset($ermsg2)) { echo $ermsg2; }?></div>
-					 </form>
-					</div>
-				<!--login Section-- ends-->
-
+										<div class="form-group">
+											<label for="pwd">Password:</label>
+											<input type="password" name="password" class="form-control" id="pwd" required/>
+										</div>
 					
-				<!--New Customer account Section-- starts-->
-					<div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="profile-tab">
-						<form method="post" enctype="multipart/form-data">
-							<div class="form-group">
-							  <label for="name">Name</label>
-							  <input type="text" id="name"  class="form-control" name="name" required="required"/>
-							</div>
-							
-							<div class="form-group">
-							  <label for="email">Email</label>
-							  <input type="email" id="email" name="email" class="form-control"  required/>
-							</div>
-							
-						   <div class="form-group">
-							  <label for="pwd">Password:</label>
-							 <input type="password" name="password" class="form-control" id="pwd" required/>
-						   </div>
-						   
-						   <div class="form-group">
-							  <label for="mobile">Mobile</label>
-							  <input type="tel" id="mobile" class="form-control" name="mobile" pattern="[2-9]{1}[0-9]{6}" placeholder="" required>
-							</div>
-		 
-						  <button type="submit" name="register" style="background:#0197A5; border:1px solid #0197A5;" class="btn btn-primary">Create New Account</button>
-						  <div class="footer" style="color:red;"><?php if(isset($ermsg)) { echo $ermsg; }?><?php if(isset($ermsg2)) { echo $ermsg2; }?></div>
-					 </form>
-					</div>    
-			  </div>
-		  </div>
-    </div>
-    <div id="User2" class="desc" style="display: none;">
-		<div class="middle" style=" margin:0px auto;width:500px; margin-top:0px;">
-			   <ul class="nav nav-tabs navbar_inverse" id="myTab2" style="background:#0197A5;border-radius:10px 10px 10px 10px;" role="tablist">
-				  <li class="nav-item">
-					  <a class="nav-link active" id="stafflogin-tab" style="color:#063344;" data-toggle="tab" href="#stafflogin" role="tab" aria-controls="stafflogin" aria-selected="true">Staff Login</a>
-				  </li>		  
-				  <li class="nav-item">
-					  <a class="nav-link" id="staffsignup-tab" style="color:#063344;" data-toggle="tab" href="#staffsignup" role="tab" aria-controls="staffsignup" aria-selected="false">Create Staff Account</a>
-				  </li>
-			   </ul>
-			   <br><br>
-			   <div class="tab-content" id="myTabContent">
+										<button type="submit" name="login" style="background:#0197A5; border:1px solid #0197A5;" class="btn btn-primary">Login </button>
+										<div class="footer" style="color:red;"><?php if(isset($ermsg)) { echo $ermsg; }?><?php if(isset($ermsg2)) { echo $ermsg2; }?></div>
+									</div>
+								</form>
+								</div>
+							<!--login Section-- ends-->
 
-			<!--Staff login Section-- starts-->
-					<div class="tab-pane fade show active" id="stafflogin" role="tabpanel" aria-labelledby="home-tab">
-						<div class="footer" style="color:red;"><?php if(isset($loginmsg)){ echo $loginmsg;}?></div>
-							<form method="post" enctype="multipart/form-data">
-							<div class="form-group">
-							<label for="s_id">Staff ID:</label>
-							<input type="s_id" class="form-control" name="s_id" id="s_id" required/>
-							</div>
-						<div class="form-group">
-							<label for="staffpwd">Password:</label>
-							<input type="password" name="staffpwd" class="form-control" id="staffpwd" required/>
+								
+							<!--New Customer account Section-- starts-->
+							<div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="profile-tab">
+								<div class="w3-container" style="border-radius: 25px; border: 1.5px solid #0197A5; padding: 20px;  width: 100%; ">
+									<h2 style="color:#0197A5;font-family: 'Permanent Marker', cursive; text-decoration: underline; text-align:center;">Customer Registration</h2>
+									<br>
+									<form method="post" enctype="multipart/form-data">
+										<div class="form-group">
+											<label for="name">Name</label>
+											<input type="text" id="name"  class="form-control" name="name" required="required"/>
+										</div>
+											
+										<div class="form-group">
+											<label for="email">Email</label>
+											<input type="email" id="email" name="email" class="form-control"  required/>
+										</div>
+											
+										<div class="form-group">
+											<label for="pwd">Password:</label>
+											<input type="password" name="password" class="form-control" id="pwd" required/>
+										</div>
+										
+										<div class="form-group">
+											<label for="mobile">Mobile</label>
+											<input type="tel" id="mobile" class="form-control" name="mobile" pattern="[2-9]{1}[0-9]{6}" placeholder="" required>
+										</div>
+						
+										<button type="submit" name="register" style="background:#0197A5; border:1px solid #0197A5;" class="btn btn-primary">Create New Account</button>
+										<div class="footer" style="color:red;"><?php if(isset($ermsg)) { echo $ermsg; }?><?php if(isset($ermsg2)) { echo $ermsg2; }?></div>
+									</form>
+								</div>
+							</div>    
 						</div>
-
-						<button type="submit" name="login1" style="background:#0197A5; border:1px solid #0197A5;" class="btn btn-primary">Login </button>
-						<div class="footer" style="color:red;"><?php if(isset($ermsg)) { echo $ermsg; }?><?php if(isset($ermsg2)) { echo $ermsg2; }?></div>
-						</form>
 					</div>
-					<!--Staff login Section-- ends-->
+				</div>
+				<div id="User2" class="desc" style="display: none;">
+					<div class="middle" style=" margin:0px auto;width:500px; margin-top:0px;">
+						<ul class="nav nav-tabs navbar_inverse" id="myTab2" style="background:#0197A5;border-radius:10px 10px 10px 10px;" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" id="stafflogin-tab" style="color:#063344;" data-toggle="tab" href="#stafflogin" role="tab" aria-controls="stafflogin" aria-selected="true">Staff Login</a>
+							</li>		  
+							<li class="nav-item">
+								<a class="nav-link" id="staffsignup-tab" style="color:#063344;" data-toggle="tab" href="#staffsignup" role="tab" aria-controls="staffsignup" aria-selected="false">Create Staff Account</a>
+							</li>
+						</ul>
+						<br>
+						<div class="tab-content" id="myTabContent">
+
+							<!--Staff login Section-- starts-->
+							<div class="tab-pane fade show active" id="stafflogin" role="tabpanel" aria-labelledby="home-tab" style="margin-top:5px;border-radius: 25px; border: 1.5px solid #0197A5; padding: 20px;  width: 100%; ">
+								<h2 style="color:#0197A5;font-family: 'Permanent Marker', cursive; text-decoration: underline; text-align:center;">Staff Login</h2>
+								
+								<div class="footer" style="text-align:center; color:red;"><?php if(isset($loginmsg)){ echo $loginmsg;}?></div>
+								<form method="post" enctype="multipart/form-data">						
+									<br><br>
+									<div class="w3-container" style=" margin-top:5px;border-radius: 25px; border: 1.5px solid #0197A5; padding: 20px;  width: 100%; ">										
+										<div class="form-group">
+											<label for="s_id">Staff ID:</label>
+											<input type="s_id" class="form-control" name="s_id" id="s_id" required/>
+										</div>
+										
+										<div class="form-group">
+											<label for="staffpwd">Password:</label>
+											<input type="password" name="staffpwd" class="form-control" id="staffpwd" required/>
+										</div>
+
+										<button type="submit" name="login1" style="background:#0197A5; border:1px solid #0197A5;" class="btn btn-primary">Login </button>
+										<div class="footer" style="color:red;"><?php if(isset($ermsg)) { echo $ermsg; }?><?php if(isset($ermsg2)) { echo $ermsg2; }?></div>
+									</div>
+								</form>
+							</div>
+							<!--Staff login Section-- ends-->
 
 
-					<!--New Staff account Section-- starts-->
-					<div class="tab-pane fade" id="staffsignup" role="tabpanel" aria-labelledby="profile-tab">
-						<form method="post" enctype="multipart/form-data">
-							<div class="form-group">
-							  <label for="ID">Staff ID</label>
-							  <input type="text" id="s_id"  class="form-control" name="s_id" required="required"/>
-							</div>
-							
-							<div class="form-group">
-							  <label for="staffname">Name</label>
-							  <input type="staffname" id="staffname" name="staffname" class="form-control"  required/>
-							</div>
+							<!--New Staff account Section-- starts-->
+							<div class="tab-pane fade" id="staffsignup" role="tabpanel" aria-labelledby="profile-tab">
+								<div class="w3-container" style="border-radius: 25px; border: 1.5px solid #0197A5; padding: 20px;  width: 100%; ">
+									<h2 style="color:#0197A5;font-family: 'Permanent Marker', cursive; text-decoration: underline; text-align:center;">Staff Registration</h2>
+								
+									<form method="post" enctype="multipart/form-data">
+										<div class="form-group">
+											<label for="ID">Staff ID</label>
+											<input type="text" id="s_id"  class="form-control" name="s_id" required="required"/>
+										</div>
+										
+										<div class="form-group">
+											<label for="staffname">Name</label>
+											<input type="staffname" id="staffname" name="staffname" class="form-control"  required/>
+										</div>
 
-							<div class="form-group">
-							  <label for="staffemail">Email</label>
-							  <input type="staffemail" id="staffemail" name="staffemail" class="form-control"  required/>
+										<div class="form-group">
+											<label for="staffemail">Email</label>
+											<input type="staffemail" id="staffemail" name="staffemail" class="form-control"  required/>
+										</div>
+										
+										<div class="form-group">
+											<label for="staffpwd">Password:</label>
+											<input type="password" name="staffpwd" class="form-control" id="staffpwd" required/>
+										</div>
+									
+										<div class="form-group">
+											<label for="mobile">Mobile</label>
+											<input type="tel" id="staff_mobile" class="form-control" name="staff_mobile" pattern="[2-9]{1}[0-9]{6}" placeholder="" required>
+										</div>
+					
+										<button type="submit" name="register1" style="background:#0197A5; border:1px solid #0197A5;" class="btn btn-primary">Create New Account</button>
+										<div class="footer" style="color:red;"><?php if(isset($ermsg)) { echo $ermsg; }?><?php if(isset($ermsg2)) { echo $ermsg2; }?></div>
+									</form>
+								</div>
 							</div>
-							
-						   <div class="form-group">
-							  <label for="staffpwd">Password:</label>
-							 <input type="password" name="staffpwd" class="form-control" id="staffpwd" required/>
-						   </div>
-						   
-						   <div class="form-group">
-							  <label for="mobile">Mobile</label>
-							  <input type="tel" id="staff_mobile" class="form-control" name="staff_mobile" pattern="[2-9]{1}[0-9]{6}" placeholder="" required>
-							</div>
-		 
-						  <button type="submit" name="register1" style="background:#0197A5; border:1px solid #0197A5;" class="btn btn-primary">Create New Account</button>
-						  <div class="footer" style="color:red;"><?php if(isset($ermsg)) { echo $ermsg; }?><?php if(isset($ermsg2)) { echo $ermsg2; }?></div>
-					 </form>
+						</div>
 					</div>
-			  </div>
-		  </div>
-    </div>
-</div>
-<!--User Views End-->
-<br><br> <br><br> <br><br>
-<?php
-include("footer.php");
-?>	   
+				</div><!--User 2 End-->
+			</div><!--User Views End-->
+	</div><!--Page Div -->
+	<footer id="footer">
+		<?php
+			include("footer.php");
+		?>
+	</footer>
+</div><!--Container div -->
 </body>
 </html>
 

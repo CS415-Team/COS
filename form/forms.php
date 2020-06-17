@@ -141,12 +141,13 @@ if(isset($register))
         <li class="nav-item">
           <a class="nav-link" href="../aboutus.php">About</a>
         </li>
-
         <li class="nav-item">
           <a class="nav-link" href="../contact.php">Contact</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="../site-help.php">Help</a>
+        </li>
       </ul>
-	  
     </div>
 	
 </nav>
