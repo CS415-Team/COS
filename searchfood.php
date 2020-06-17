@@ -37,7 +37,25 @@ else
  {
 	if(!empty($_SESSION['cust_id']) || !empty($_SESSION['staff_id']))
 	{
-		header("location:form/cart.php?product=$addtocart");
+		$query=mysqli_query($con,"select qty_available from tbfood where food_id =$addtocart");
+
+		while($res=mysqli_fetch_assoc($query))
+		{
+			if($_POST['foodqty'] > $res['qty_available'])
+			{
+				echo "<script> alert('Error: Cannot proceed to cart. Quantity ordered exceeds current available quantity');document.location='searchfood.php?food_id='.$fid.'</script>";
+			}
+			else if($_POST['foodqty'] == 0)
+			{
+				echo "<script> alert('Error: Cannot proceed to cart. Please enter a valid quantity [>0]');document.location='searchfood.php?food_id='.$fid.'</script>";
+			}
+			else
+			{
+				$_SESSION['qty'] = $_POST['foodqty'];
+				
+				header("location:form/cart.php?product=$addtocart");	
+			}
+		}
 	}
 	else
 	{
@@ -57,7 +75,7 @@ else
 
 
  
-$query=mysqli_query($con,"select tbfood.foodname,tbfood.fldmanager_id,tbfood.cost,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id, tblcart.fld_staff_id 
+$query=mysqli_query($con,"select tbfood.foodname,tbfood.cost,tbfood.fldimage,tblcart.fld_cart_id,tblcart.fld_product_id,tblcart.fld_customer_id, tblcart.fld_staff_id 
 						 from tbfood inner join tblcart on tbfood.food_id=tblcart.fld_product_id 
 						 where tblcart.fld_customer_id='$cust_id'
  							OR tblcart.fld_staff_id='$staff_id'
@@ -305,22 +323,19 @@ $re=mysqli_num_rows($query);
 		   <div class="col-sm-6" >
 		   <?php
 			  
-			  $query=mysqli_query($con,"select tblmanager.fld_email,tblmanager.fld_name,tblmanager.fld_mob,
-			  tblmanager.fld_phone,tblmanager.fld_address,tblmanager.fld_logo,tbfood.foodname,tbfood.cost,
-			  tbfood.cuisines,tbfood.paymentmode,tbfood.fldimage from tblmanager inner join
-			  tbfood on tblmanager.fldmanager_id=tbfood.fldmanager_id where tbfood.food_id='$fid'");
+			  $query=mysqli_query($con,"select * from tbfood where tbfood.food_id='$fid'");
 			  if(mysqli_num_rows($query))
 			  {
 			  while($res=mysqli_fetch_assoc($query))
 			  {
-				   $food_pic= "image/restaurant/".$res['fld_email']."/foodimages/".$res['fldimage'];
+				$food_pic= "image/restaurant/foodimages/".$res['fldimage'];
 			  ?>
 			  <div class="w3-container">
 				<div class="row" style="padding-top:10px; text-align:right;">
 					<div class="column" style="width:33.33%"></div>
-					<div class="column" style="width:33.33%">
+					<div class="column" style="width:33.33%; text-align:center;">
 							<span style="font-family: 'Miriam Libre', sans-serif; font-size:30px; color:#CB202D;">
-								<?php echo $res['fld_name']; ?>
+								<?php echo $res['foodname']; ?>
 							</span>
 					</div>
 					<div class="column" style="width:33.33%;"></div>
@@ -335,10 +350,14 @@ $re=mysqli_num_rows($query);
 				<div class="row">
 					<div class="column" style="text-align:left; width: 33.33%;">
 					</div>
-					<div class="column" style="text-align:center; width:33.33%"><?php echo"(" .$res['foodname'].")"?></b></div>
+					<div class="column" style="text-align:center; width:33.33%"></div>
 					<div  class="column" style="float:left; width: 33.33%; display:inline; text-align:right; padding:10px; font-size:15px;">
-					<span style="color:black; font-size:25px; white-space:nowrap;">Price: $<?php echo $res['cost']; ?></span>
+					<span style="color:black; font-size:25px; white-space:nowrap;">Items Available:  <?php echo $res['qty_available']; ?></span>
+					<span style="color:black; font-size:25px; white-space:nowrap;">Price:   $<?php echo $res['cost']; ?></span>
 						<form method="post">
+							<span style="color:black; font-size:25px; white-space:nowrap;">Quantity: 
+							<input type="number" id="foodqty" name="foodqty" min="0" max="20" step="1" value="0" style="font-size:20px;"></span>
+							<br><br>
 							<button type="submit" name="addtocart" value="<?php echo $fid; ?>")" >
 							<span style="color:green; font-size:2vw;">Add to cart: <i class="fa fa-shopping-cart" aria-hidden="true"></i></span></button>
 						</form>

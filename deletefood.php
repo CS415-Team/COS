@@ -3,55 +3,42 @@ include('connection.php');
 //echo $id=$_GET['id'];
 if(isset($_GET['id']))
 {
-	$id=$_GET['id'];
-	$q=mysqli_query($con,"select tbfood.fldimage,tblvendor.fld_email from tbfood inner join tblvendor on tbfood.fldvendor_id=tbfood.fldvendor_id where food_id='$id' ");
-    $res=mysqli_fetch_assoc($q);
-    $e=$res['fld_email'];
-    $img=$res['fldimage'];
-	unlink("image/restaurant/$e/foodimages/$img");
-	if(mysqli_query($con,"delete  from  tbfood where food_id='$id' "))
-     {
-	
-	
-       
-       header( "refresh:5;url=dashboard.php" );
- 
+  $id=$_GET['id'];
+  $q=mysqli_query($con,"select * from tbfood inner join ingredient on tbfood.food_id=ingredient.food_id where food_id='$id' ");
+  $res=mysqli_fetch_assoc($q);
+  $img=$res['fldimage'];
+  $res_name = $res['res_name'];
 
-	
-     }
-  else
+  unlink("image/restaurant/$res_name/$img");
+  if($res['food_type'] == 'custom')
+  {
+    mysqli_query($con,"delete from ingredient where food_id ='$id'");
+    if(mysqli_query($con,"delete  from  tbfood where food_id='$id' "))
     {
-	echo "failed to delete";
-     }
-	
+      header( "refresh:5;url=dashboard.php" );	
+    }
+    else
+    {
+      echo "failed to delete";
+    }
+  }
+  else
+  {  
+    if(mysqli_query($con,"delete  from  tbfood where food_id='$id' "))
+    {
+      header( "refresh:5;url=dashboard.php" );	
+    }
+    else
+    {
+      echo "failed to delete";
+    }
+  }	
 }
 else
 {
-	header("location:vendor_login.php");
+	header("location:admin.php");
 }
 
-
-
-
-
-
-//rmdir("image/$e/foodimages");
-//rmdir("image/$e");
-
-if(mysqli_query($con,"delete  from  tbfood where food_id='$id' "))
-{
-	
-	
-
-    header( "refresh:5;url=dashboard.php" );
- 
-
-	
-}
-else
-{
-	echo "failed to delete";
-}
 ?>
 <html>
   <head>
